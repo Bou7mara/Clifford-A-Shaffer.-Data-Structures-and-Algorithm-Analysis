@@ -1,0 +1,409 @@
+\documentclass[12pt,a4paper]{article}
+
+% ======================== PACKAGES ========================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}                    % improved Computer Modern font
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}                   % fine-grained list control
+\usepackage{fancyhdr}                   % headers / footers
+\usepackage{titlesec}                   % section styling
+\usepackage[hidelinks]{hyperref}        % clickable TOC, no ugly boxes
+\usepackage{microtype}                  % better typographic fitting
+
+% ======================== PGFPLOTS ========================
+\pgfplotsset{compat=1.18}
+
+% ======================== COLORS ==========================
+\definecolor{coverblue}{HTML}{1e3a5f}
+\definecolor{accentgold}{HTML}{d4a94c}
+\definecolor{sectionblue}{HTML}{1e3a5f}
+\definecolor{plotA}{HTML}{e63946}       % red
+\definecolor{plotB}{HTML}{457b9d}       % steel
+\definecolor{plotC}{HTML}{2a9d8f}       % teal
+\definecolor{plotD}{HTML}{e9c46a}       % yellowish
+\definecolor{plotE}{HTML}{264653}       % dark teal
+\definecolor{plotF}{HTML}{f4a261}       % sand
+\definecolor{plotG}{HTML}{6a0572}       % purple
+
+% ======================== GEOMETRY ========================
+\geometry{margin=2.5cm}
+
+% ======================== HEADERS =========================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Chapter 3: Algorithm Analysis}}
+\fancyhead[R]{\small\textit{Solutions Manual}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ======================== SECTION STYLE ===================
+\titleformat{\subsection}
+  {\large\bfseries\color{sectionblue}}
+  {}
+  {0em}
+  {}
+  [\vspace{-0.3em}\textcolor{sectionblue}{\rule{\linewidth}{0.5pt}}]
+
+% ======================== LIST STYLE ======================
+\setlist[itemize]{itemsep=0.4em, parsep=0.2em}
+
+% ======================== COMMANDS ========================
+\newcommand{\exercise}[1]{%
+  \subsection*{Exercise #1}%
+  \addcontentsline{toc}{subsection}{Exercise #1}%
+}
+
+
+
+
+% ===========================================================
+%                       DOCUMENT
+% ===========================================================
+\begin{document}
+
+% ----------------------- COVER PAGE -----------------------
+\newgeometry{margin=0pt}
+\thispagestyle{empty}
+\pagenumbering{gobble}
+\pagecolor{coverblue}
+
+\vspace*{0.12\textheight}
+
+\begin{center}
+
+    % — sub-title —
+    {\fontsize{14}{18}\selectfont\color{accentgold}%
+     \textls[120]{THE COMPLETE SOLUTIONS MANUAL}}
+
+    \vspace{0.6cm}
+    {\color{accentgold}\rule{6.7cm}{0.6pt}}
+
+    \vspace{1.8cm}
+
+    % — title —
+    {\fontsize{32}{38}\selectfont\bfseries\color{white}%
+     Data Structures \&\\[6pt] Algorithm Analysis in C++}
+
+    \vspace{1.2cm}
+
+    % — author of textbook —
+    {\fontsize{24}{28}\selectfont\color{white!80}%
+     by Clifford A.\@ Shaffer}
+
+    \vspace{3.5cm}
+
+    % — chapter —
+    {\fontsize{24}{30}\selectfont\bfseries\color{accentgold}%
+     Chapter 3:}
+
+    \vspace{0.4cm}
+
+    {\fontsize{24}{26}\selectfont\color{white}%
+     Algorithm Analysis}
+
+    \vfill
+
+    {\color{accentgold}\rule{4cm}{0.4pt}}
+
+    \vspace{0.6cm}
+
+    {\fontsize{18}{22}\selectfont\color{white!70}%
+     Ahmed Amine Azzouzi}
+
+    \vspace{1.5cm}
+
+\end{center}
+
+% ------------------- CONTENT PAGES ------------------------
+\newpage
+\restoregeometry
+\pagecolor{white}
+\color{black}
+\pagenumbering{arabic}
+
+
+
+
+% =============================================================
+%  EXERCISE 3.1
+% =============================================================
+\exercise{3.1}
+
+To find the most efficient expression we identify which function yields
+the \emph{lowest} value for a given positive integer~$n$.
+
+\begin{itemize}
+
+    \item $n!$~\textbf{is most efficient for} $1 \le n \le 3$.\\[2pt]
+    {\small\textit{Justification:}
+     For $n \in \{1,2,3\}$, we get $n! = \{1,2,6\}$, which strictly
+     beats the next-best function $2^{n} = \{2,4,8\}$.}
+
+    \item $2^{n}$~\textbf{is most efficient for} $4 \le n \le 5$.\\[2pt]
+    {\small\textit{Justification:}
+     For $n \in \{4,5\}$, $2^{n} = \{16,32\}$, beating
+     $n! = \{24,120\}$, $2n^{2} = \{32,50\}$, and $10n = \{40,50\}$.}
+
+    \item $10n$~\textbf{is most efficient for} $n \ge 6$.\\[2pt]
+    {\small\textit{Justification:}
+     At $n=6$, $10 \cdot 6 = 60 < 2^{6} = 64 < 2 \cdot 6^{2} = 72$.
+     Since $10n$ is linear (lowest growth rate among the remaining
+     candidates), it stays most efficient for all larger~$n$.}
+
+\end{itemize}
+
+\medskip
+The remaining expressions are \textbf{never} the most efficient for any
+positive integer.
+
+
+
+
+
+% =============================================================
+%  EXERCISE 3.2
+% =============================================================
+\exercise{3.2}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+
+% ---------- LEFT GRAPH ----------
+\begin{axis}[
+    name=leftplot,
+    width=7.2cm, height=7.2cm,
+    axis lines=left,
+    xmin=0, xmax=5,
+    ymin=0, ymax=100,
+    xlabel={$n$},
+    ylabel={Value},
+    samples=200,
+    title={\small Close-up ($n \le 5$)},
+    legend to name=commonlegend,
+    legend columns=4,
+    legend style={
+        draw=none,
+        column sep=10pt,
+        /tikz/every even column/.append style={column sep=18pt},
+        font=\small
+    }
+]
+
+\addplot[thick, color=plotA, domain=0.1:5]         {ln(x)/ln(3)};
+    \addlegendentry{$\log_3 n$}
+\addplot[thick, dashed, color=plotB, domain=0:5]   {2};
+    \addlegendentry{$2$}
+\addplot[thick, densely dotted, color=plotC, domain=0.1:5] {ln(x)/ln(2)};
+    \addlegendentry{$\log_2 n$}
+\addplot[thick, dashdotted, color=plotD, domain=0:5] {x^(2/3)};
+    \addlegendentry{$n^{2/3}$}
+\addplot[thick, color=plotE, domain=0:5]           {20*x};
+    \addlegendentry{$20n$}
+\addplot[thick, loosely dashed, color=plotF, domain=0:5]  {4*x^2};
+    \addlegendentry{$4n^2$}
+\addplot[thick, loosely dotted, color=plotG, domain=0:5]  {3^x};
+    \addlegendentry{$3^n$}
+
+\end{axis}
+
+% ---------- RIGHT GRAPH ----------
+\begin{axis}[
+    width=7.2cm, height=7.2cm,
+    at={(leftplot.outer east)},
+    anchor=outer west,
+    xshift=1.2cm,
+    axis lines=left,
+    xmin=0, xmax=10,
+    ymin=0, ymax=10,
+    xlabel={$n$},
+    title={\small Zoomed ($n \le 10$, $y \le 10$)},
+    samples=200
+]
+
+\addplot[thick, color=plotA, domain=0.1:10]        {ln(x)/ln(3)};
+\addplot[thick, dashed, color=plotB, domain=0:10]  {2};
+\addplot[thick, densely dotted, color=plotC, domain=0.1:10] {ln(x)/ln(2)};
+\addplot[thick, dashdotted, color=plotD, domain=0:10] {x^(2/3)};
+
+\end{axis}
+
+\end{tikzpicture}
+
+\vspace{0.5em}
+\ref{commonlegend}
+\caption{Growth comparison of seven functions.}
+\label{fig:ex32}
+\end{figure}
+
+\textbf{Analysis of Efficiency.}\;
+We compare
+\[
+    4n^{2},\quad \log_3 n,\quad 3^{n},\quad 20n,\quad 2,\quad \log_2 n,\quad n^{2/3}
+\]
+to determine which yields the smallest value for each integer~$n$.
+
+\begin{itemize}
+
+    \item \textbf{At $n=1$:}\;
+          $\log_2 1 = \log_3 1 = 0$, smaller than every other expression.
+          The logarithmic functions are most efficient here.
+
+    \item \textbf{For $2 \le n \le 8$:}\;
+          $\log_3 n$ grows more slowly than $\log_2 n$ and remains below
+          all other functions.  At $n=8$, $\log_3 8 \approx 1.89 < 2$.
+
+    \item \textbf{For $n \ge 9$:}\;
+          $\log_3 9 = 2$, so from here the constant function~$2$ ties and
+          then beats $\log_3 n$.  The constant~$2$ is most efficient.
+
+\end{itemize}
+
+\medskip
+\textbf{Conclusion:}
+\begin{itemize}
+    \item $\log_2 n$ and $\log_3 n$ are most efficient at $n=1$.
+    \item $\log_3 n$ is most efficient for $2 \le n \le 8$.
+    \item The constant $2$ is most efficient for $n \ge 9$.
+\end{itemize}
+
+\smallskip
+\textit{Remark.}\;
+The functions $4n^{2}$, $3^{n}$, $20n$, and $n^{2/3}$ are never the
+most efficient for any integer $n \ge 1$.
+
+
+
+
+
+% =============================================================
+%  EXERCISE 3.3
+% =============================================================
+\exercise{3.3}
+
+Ordering by asymptotic growth rate (slowest to fastest):
+
+\[
+    2 \;<\; \log_3 n \;<\; \log_2 n \;<\; n^{2/3}
+      \;<\; 20n \;<\; 4n^{2} \;<\; 3^{n} \;<\; n!
+\]
+
+\textbf{Explanation:}
+\begin{itemize}
+    \item \emph{Constants} grow slowest.
+    \item \emph{Logarithms} grow slower than any polynomial.
+    \item \emph{Sub-linear powers} ($n^{2/3}$) grow faster than logs but
+          slower than linear functions.
+    \item \emph{Exponentials} grow faster than all polynomials.
+    \item \emph{Factorial} growth dominates all exponentials.
+\end{itemize}
+
+
+
+
+
+% =============================================================
+%  EXERCISE 3.4
+% =============================================================
+\exercise{3.4}
+
+A new machine is $64\times$ faster.  For each complexity, find the new
+problem size~$n'$ solvable in the same time.
+
+\bigskip
+
+\textbf{(a)}\; $T(n)=3\cdot 2^{n}$
+\[
+    \frac{3 \cdot 2^{n'}}{64} = 3 \cdot 2^{n}
+    \;\Longrightarrow\;
+    2^{n'} = 2^{n+6}
+    \;\Longrightarrow\;
+    \boxed{n' = n + 6}
+\]
+
+\textbf{(b)}\; $T(n)=n^{2}$
+\[
+    \frac{(n')^{2}}{64} = n^{2}
+    \;\Longrightarrow\;
+    (n')^{2} = 64\,n^{2}
+    \;\Longrightarrow\;
+    \boxed{n' = 8n}
+\]
+
+\textbf{(c)}\; $T(n)=8n$
+\[
+    \frac{8n'}{64} = 8n
+    \;\Longrightarrow\;
+    n' = 64n
+    \;\Longrightarrow\;
+    \boxed{n' = 64n}
+\]
+
+
+
+
+% =============================================================
+%  EXERCISE 3.5
+% =============================================================
+\exercise{3.5}
+
+
+\textbf{Setup.}\;
+Let $T$ denote the growth-rate function of the algorithm.
+Prunes solves size~$n$ in one hour, so $T(n)$ units of work fill one
+hour on Prunes.  XYZ is $100\times$ faster, so in one hour it performs
+$100\,T(n)$ units of work.  We need $n'$ such that
+\[
+    T(n') = 100\,T(n).
+\]
+
+\bigskip
+
+\textbf{(a)}\; $T(n)=n$
+\[
+    n' = 100\,n
+    \;\Longrightarrow\;
+    \boxed{n' = 100n}
+\]
+
+\textbf{(b)}\; $T(n)=n^{2}$
+\[
+    (n')^{2} = 100\,n^{2}
+    \;\Longrightarrow\;
+    n' = \sqrt{100}\,n
+    \;\Longrightarrow\;
+    \boxed{n' = 10n}
+\]
+
+\textbf{(c)}\; $T(n)=n^{3}$
+\[
+    (n')^{3} = 100\,n^{3}
+    \;\Longrightarrow\;
+    n' = \sqrt[3]{100}\,n
+    \;\Longrightarrow\;
+    \boxed{n' = 100^{1/3}\,n \approx 4.64\,n}
+\]
+
+\textbf{(d)}\; $T(n)=2^{n}$
+\[
+    2^{n'} = 100 \cdot 2^{n}
+    \;\Longrightarrow\;
+    n' = n + \log_2 100
+    \;\Longrightarrow\;
+    \boxed{n' \approx n + 6.64}
+\]
+
+\medskip
+Observation: For polynomial-time algorithms, the speed-up \emph{multiplies} the
+solvable input size by a constant factor.  For the exponential algorithm
+$2^{n}$, it only \emph{adds} a constant ($\approx 6.64$) a much
+smaller improvement, illustrating why exponential algorithms scale so
+poorly.
+
+\end{document}
