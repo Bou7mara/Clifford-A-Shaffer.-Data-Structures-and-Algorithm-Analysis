@@ -525,4 +525,63 @@ This illustrates that big-Oh is an \emph{upper bound}, not a tight one.
 A constant function is trivially dominated by a linear one, so membership
 in $O(n)$ is a weaker (less informative) claim than membership in $O(1)$.
 
+
+
+% =============================================================
+%  EXERCISE 3.8
+% =============================================================
+\exercise{3.8}
+
+We assume that all constants $c_i$ are positive.
+
+\bigskip
+
+\textbf{(a)}\; $f(n) = c_1 n$
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Upper Bound:} $O(n)$. We need $f(n) \le c\,n$ for $n \ge n_0$.
+          Choose $c = c_1$ and $n_0 = 1$. Then $c_1 n \le c_1 n$ is trivially true.
+    \item \textbf{Lower Bound:} $\Omega(n)$. We need $f(n) \ge c\,n$ for $n \ge n_0$.
+          Choose $c = c_1$ and $n_0 = 1$. Then $c_1 n \ge c_1 n$ is trivially true.
+\end{itemize}
+
+\bigskip
+
+\textbf{(b)}\; $f(n) = c_2 n^3 + c_3$
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Upper Bound:} $O(n^3)$. We need $f(n) \le c\,n^3$ for $n \ge n_0$.
+          For $n \ge 1$, we have $c_3 \le c_3 n^3$. 
+          Thus, $c_2 n^3 + c_3 \le c_2 n^3 + c_3 n^3 = (c_2 + c_3)n^3$.
+          Choose $c = c_2 + c_3$ and $n_0 = 1$.
+    \item \textbf{Lower Bound:} $\Omega(n^3)$. We need $f(n) \ge c\,n^3$ for $n \ge n_0$.
+          Since $c_3 > 0$, $c_2 n^3 + c_3 \ge c_2 n^3$.
+          Choose $c = c_2$ and $n_0 = 1$.
+\end{itemize}
+
+\bigskip
+
+\textbf{(c)}\; $f(n) = c_4 n \log n + c_5 n$
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Upper Bound:} $O(n \log n)$. We need $f(n) \le c\,n \log n$ for $n \ge n_0$.
+          Assuming base-$2$ logarithms, for $n \ge 2$, we have $\log n \ge 1$, so $n \le n \log n$.
+          Thus, $c_4 n \log n + c_5 n \le c_4 n \log n + c_5 n \log n = (c_4 + c_5)n \log n$.
+          Choose $c = c_4 + c_5$ and $n_0 = 2$.
+    \item \textbf{Lower Bound:} $\Omega(n \log n)$. We need $f(n) \ge c\,n \log n$ for $n \ge n_0$.
+          Since $c_5 n \ge 0$ for $n \ge 1$, $c_4 n \log n + c_5 n \ge c_4 n \log n$.
+          Choose $c = c_4$ and $n_0 = 1$.
+\end{itemize}
+
+\bigskip
+
+\textbf{(d)}\; $f(n) = c_6 2^n + c_7 n^6$
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Upper Bound:} $O(2^n)$. We need $f(n) \le c\,2^n$ for $n \ge n_0$.
+          We know that exponentials dominate polynomials, so there exists some integer where $n^6 \le 2^n$.
+          By testing values, we find that $n^6 \le 2^n$ holds for $n \ge 30$.
+          Thus, $c_6 2^n + c_7 n^6 \le c_6 2^n + c_7 2^n = (c_6 + c_7)2^n$.
+          Choose $c = c_6 + c_7$ and $n_0 = 30$.
+    \item \textbf{Lower Bound:} $\Omega(2^n)$. We need $f(n) \ge c\,2^n$ for $n \ge n_0$.
+          Since $c_7 n^6 \ge 0$ for $n \ge 1$, $c_6 2^n + c_7 n^6 \ge c_6 2^n$.
+          Choose $c = c_6$ and $n_0 = 1$.
+\end{itemize}
+
 \end{document}
