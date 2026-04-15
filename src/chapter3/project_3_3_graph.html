@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fibonacci Timings</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            text-align: center;
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Project 3.3 — Recursive vs Iterative Fibonacci</h2>
+    <p>Comparison of running times (in microseconds) on a logarithmic scale.</p>
+    <canvas id="myChart"></canvas>
+
+    <script>
+        const raw_data = [
+            { n: 1, rec: 0.001, iter: 0.001 },
+            { n: 2, rec: 0.001, iter: 0.001 },
+            { n: 3, rec: 0.003, iter: 0.002 },
+            { n: 4, rec: 0.002, iter: 0.001 },
+            { n: 5, rec: 0.003, iter: 0.001 },
+            { n: 6, rec: 0.004, iter: 0.001 },
+            { n: 7, rec: 0.008, iter: 0.001 },
+            { n: 8, rec: 0.010, iter: 0.001 },
+            { n: 9, rec: 0.020, iter: 0.002 },
+            { n: 10, rec: 0.028, iter: 0.002 },
+            { n: 11, rec: 0.050, iter: 0.002 },
+            { n: 12, rec: 0.070, iter: 0.003 },
+            { n: 13, rec: 0.131, iter: 0.003 },
+            { n: 14, rec: 0.194, iter: 0.003 },
+            { n: 15, rec: 0.347, iter: 0.003 },
+            { n: 16, rec: 0.617, iter: 0.003 },
+            { n: 17, rec: 0.875, iter: 0.006 },
+            { n: 18, rec: 1.725, iter: 0.003 },
+            { n: 19, rec: 2.471, iter: 0.004 },
+            { n: 20, rec: 4.877, iter: 0.004 },
+            { n: 21, rec: 5.948, iter: 0.004 },
+            { n: 22, rec: 12.421, iter: 0.004 },
+            { n: 23, rec: 16.411, iter: 0.004 },
+            { n: 24, rec: 31.351, iter: 0.004 },
+            { n: 25, rec: 41.998, iter: 0.006 },
+            { n: 26, rec: 81.183, iter: 0.005 },
+            { n: 27, rec: 107.916, iter: 0.005 },
+            { n: 28, rec: 207.547, iter: 0.005 },
+            { n: 29, rec: 297.336, iter: 0.006 },
+            { n: 30, rec: 519.324, iter: 0.006 },
+            { n: 31, rec: 771.265, iter: 0.009 },
+            { n: 32, rec: 1322.170, iter: 0.007 },
+            { n: 33, rec: 2066.382, iter: 0.007 },
+            { n: 34, rec: 3392.597, iter: 0.007 },
+            { n: 35, rec: 5563.393, iter: 0.007 },
+            { n: 36, rec: 8900.480, iter: 0.007 },
+            { n: 37, rec: 14638.600, iter: 0.008 },
+            { n: 38, rec: 22559.850, iter: 0.008 },
+            { n: 39, rec: 39424.200, iter: 0.008 },
+            { n: 40, rec: 57858.100, iter: 0.008 },
+            { n: 41, rec: 103271.300, iter: 0.009 },
+            { n: 42, rec: 151220.100, iter: 0.009 },
+            { n: 43, iter: 0.009 },
+            { n: 44, iter: 0.009 },
+            { n: 45, iter: 0.010 },
+            { n: 46, iter: 0.010 }
+        ];
+
+        new Chart(document.getElementById('myChart'), {
+            type: 'line',
+            data: {
+                labels: raw_data.map(d => d.n),
+                datasets: [
+                    {
+                        label: 'Recursive (µs)',
+                        data: raw_data.map(d => d.rec || 0.001),
+                        borderColor: 'red',
+                        tension: 0.2
+                    },
+                    {
+                        label: 'Iterative (µs)',
+                        data: raw_data.map(d => d.iter || 0.001),
+                        borderColor: 'blue',
+                        tension: 0.2
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        type: 'logarithmic',
+                        title: { display: true, text: 'Time (µs) - Log Scale' },
+                    },
+                    x: {
+                        title: { display: true, text: 'Fibonacci n' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
