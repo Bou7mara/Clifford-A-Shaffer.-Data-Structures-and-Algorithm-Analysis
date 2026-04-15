@@ -616,4 +616,36 @@ Therefore, the smallest integer is
     \boxed{k = 2}
 \]
 
+% =============================================================
+%  EXERCISE 3.10
+% =============================================================
+\exercise{3.10}
+
+\textbf{(a)}\; Is $2n = \Theta(3n)$? Explain why or why not.
+
+\textbf{Yes.} For $2n \in \Theta(3n)$, we must find positive constants $c_1, c_2,$ and $n_0$ such that:
+\[
+    c_1(3n) \le 2n \le c_2(3n) \quad \text{for all } n \ge n_0.
+\]
+Dividing by $n$ (for $n \ge 1$), we get:
+\[
+    3 c_1 \le 2 \le 3 c_2
+\]
+This requires $c_1 \le \frac{2}{3}$ and $c_2 \ge \frac{2}{3}$.
+We can choose $c_1 = \frac{1}{2}$, $c_2 = 1$, and $n_0 = 1$. The inequalities $\frac{3}{2} \le 2 \le 3$ hold true. Thus, $\boxed{2n \in \Theta(3n)}$.
+
+\bigskip
+
+\textbf{(b)}\; Is $2^n = \Theta(3^n)$? Explain why or why not.
+
+\textbf{No.} For $2^n \in \Theta(3^n)$ to be true, there must exist positive constants $c_1, c_2,$ and $n_0$ such that:
+\[
+    c_1(3^n) \le 2^n \le c_2(3^n) \quad \text{for all } n \ge n_0.
+\]
+Focusing on the lower bound, dividing both sides by $3^n$ gives:
+\[
+    c_1 \le \left(\frac{2}{3}\right)^n
+\]
+Since $\frac{2}{3} < 1$, as $n \to \infty$, the term $\left(\frac{2}{3}\right)^n \to 0$. In order for the inequality to hold for all arbitrarily large $n$, $c_1$ would have to be $\le 0$. However, by definition, $c_1$ must be a strictly positive constant ($c_1 > 0$). Since no such constant can exist, $2^n$ is not bounded below by a positive multiple of $3^n$. Thus, $\boxed{2^n \notin \Theta(3^n)}$.
+
 \end{document}
