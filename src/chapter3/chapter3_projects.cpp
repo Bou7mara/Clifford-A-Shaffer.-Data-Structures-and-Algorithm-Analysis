@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <fstream>
 #include <string>
+#include <cassert>
 
 // ============================================================================
 // Project 3.1 - Boolean Access Time Comparison
@@ -362,6 +363,181 @@ static void project_3_2() {
 }
 
 // ============================================================================
+// Project 3.3 - Fibonacci: Recursive vs Iterative
+//
+// Compare the running times of the recursive and iterative Fibonacci
+// functions from Exercise 2.11 for n = 1..46 (largest value fitting in
+// a long). The recursive version is O(2^n), the iterative is O(n).
+// Output a table and CSV for graphing.
+// ============================================================================
+
+// Recursive Fibonacci generator — O(2^n) exponential time
+// fibr(46) is the largest value that fits in a long
+static long fibr(int n) {
+    assert((n > 0) && (n < 47) && "Input out of range");
+    if ((n == 1) || (n == 2)) return 1;   // Base cases
+    return fibr(n - 1) + fibr(n - 2);     // Recursion
+}
+
+// Iterative Fibonacci generator — O(n) linear time
+// fibi(46) is the largest value that fits in a long
+static long fibi(int n) {
+    assert((n > 0) && (n < 47) && "Input out of range");
+    long past, prev, curr;
+    past = prev = curr = 1;               // initialize
+    for (int i = 3; i <= n; i++) {         // Compute next value
+        past = prev;                       // past holds fibi(i-2)
+        prev = curr;                       // prev holds fibi(i-1)
+        curr = past + prev;               // curr now holds fibi(i)
+    }
+    return curr;
+}
+
+static void project_3_3() {
+    std::cout << "\n";
+    std::cout << "========================================================\n";
+    std::cout << " Project 3.3 — Fibonacci: Recursive vs Iterative\n";
+    std::cout << "========================================================\n";
+    std::cout << " Timing fibr(n) [O(2^n)] vs fibi(n) [O(n)].\n";
+    std::cout << " Recursive is only run for small n (it gets very slow).\n";
+    std::cout << "========================================================\n\n";
+
+    // We run the iterative version for n = 1..46.
+    // We run the recursive version for n = 1..MAX_RECURSIVE_N.
+    // Beyond ~40-42 the recursive version takes minutes/hours.
+    const int MAX_N = 46;
+    const int MAX_RECURSIVE_N = 42; // ~1-2 seconds at n=42
+
+    // For small n, we repeat many times to get measurable timings.
+    // For the recursive version at large n, one call is enough.
+
+    struct Result {
+        int n;
+        double recursive_us;  // microseconds
+        double iterative_us;
+        long fib_value;
+    };
+    std::vector<Result> results;
+
+    // Table header
+    std::cout << std::fixed;
+    std::cout << "  " << std::left
+              << std::setw(6)  << "n"
+              << std::setw(22) << "Fib(n)"
+              << std::setw(20) << "Recursive (us)"
+              << std::setw(20) << "Iterative (us)"
+              << "Ratio (R/I)"
+              << "\n";
+    std::cout << "  " << std::string(80, '-') << "\n";
+
+    volatile long sink = 0;
+
+    for (int n = 1; n <= MAX_N; n++) {
+        double rec_us = -1.0;
+        double iter_us = 0.0;
+
+        // --- Iterative timing ---
+        // For small n, repeat many times to get meaningful measurements
+        {
+            long long reps;
+            if (n <= 10)      reps = 10'000'000LL;
+            else if (n <= 30) reps = 1'000'000LL;
+            else              reps = 100'000LL;
+
+            auto start = std::chrono::high_resolution_clock::now();
+            for (long long r = 0; r < reps; r++) {
+                sink = fibi(n);
+            }
+            auto end = std::chrono::high_resolution_clock::now();
+            double total_us = std::chrono::duration<double, std::micro>(end - start).count();
+            iter_us = total_us / (double)reps;
+        }
+
+        // --- Recursive timing ---
+        if (n <= MAX_RECURSIVE_N) {
+            // Adjust repetitions: for small n many reps, for large n just a few
+            long long reps;
+            if (n <= 15)      reps = 1'000'000LL;
+            else if (n <= 20) reps = 100'000LL;
+            else if (n <= 25) reps = 10'000LL;
+            else if (n <= 30) reps = 1'000LL;
+            else if (n <= 35) reps = 100LL;
+            else if (n <= 38) reps = 10LL;
+            else              reps = 1LL;
+
+            auto start = std::chrono::high_resolution_clock::now();
+            for (long long r = 0; r < reps; r++) {
+                sink = fibr(n);
+            }
+            auto end = std::chrono::high_resolution_clock::now();
+            double total_us = std::chrono::duration<double, std::micro>(end - start).count();
+            rec_us = total_us / (double)reps;
+        }
+
+        long fib_val = fibi(n);
+
+        // Print row
+        std::cout << "  " << std::left << std::setw(6) << n
+                  << std::setw(22) << fib_val;
+
+        if (rec_us >= 0) {
+            std::cout << std::setw(20) << std::setprecision(3) << rec_us;
+        } else {
+            std::cout << std::setw(20) << "--- (skipped)";
+        }
+
+        std::cout << std::setw(20) << std::setprecision(3) << iter_us;
+
+        if (rec_us >= 0 && iter_us > 0) {
+            std::cout << std::setprecision(1) << (rec_us / iter_us) << "x";
+        } else {
+            std::cout << "---";
+        }
+        std::cout << "\n";
+
+        results.push_back({n, rec_us, iter_us, fib_val});
+    }
+
+    // Prevent sink from being optimized away
+    if (sink == -999) std::cout << sink;
+
+    // ---- Write CSV for graphing ----
+    std::string csv_path = "project_3_3_results.csv";
+    std::ofstream csv(csv_path);
+    if (csv.is_open()) {
+        csv << "n,fib_value,recursive_us,iterative_us\n";
+        for (auto& r : results) {
+            csv << r.n << "," << r.fib_value << ",";
+            if (r.recursive_us >= 0)
+                csv << std::fixed << std::setprecision(3) << r.recursive_us;
+            else
+                csv << "";
+            csv << "," << std::fixed << std::setprecision(3) << r.iterative_us << "\n";
+        }
+        csv.close();
+        std::cout << "\n  Results written to: " << csv_path << "\n";
+    }
+
+    // ---- Analysis ----
+    std::cout << "\n";
+    std::cout << "========================================================\n";
+    std::cout << " Analysis\n";
+    std::cout << "========================================================\n";
+    std::cout << " The recursive Fibonacci has O(2^n) time complexity.\n";
+    std::cout << " Each call spawns two sub-calls, leading to exponential\n";
+    std::cout << " growth. At n=42 it already takes seconds.\n";
+    std::cout << "\n";
+    std::cout << " The iterative Fibonacci has O(n) time complexity.\n";
+    std::cout << " It uses a simple loop with three variables, completing\n";
+    std::cout << " in nanoseconds even for n=46.\n";
+    std::cout << "\n";
+    std::cout << " The ratio (recursive/iterative) grows exponentially,\n";
+    std::cout << " showing the dramatic cost of redundant recomputation\n";
+    std::cout << " in the naive recursive approach.\n";
+    std::cout << "========================================================\n";
+}
+
+// ============================================================================
 // Main — menu to select which project to run
 // ============================================================================
 
@@ -371,8 +547,7 @@ int main() {
     std::cout << "========================================================\n";
     std::cout << "  [1] Project 3.1 — Boolean Access Time Comparison\n";
     std::cout << "  [2] Project 3.2 — Sequential vs Binary Search\n";
-    // Future projects:
-    // std::cout << "  [3] Project 3.3 — ...\n";
+    std::cout << "  [3] Project 3.3 — Fibonacci: Recursive vs Iterative\n";
     std::cout << "  [0] Exit\n";
     std::cout << "========================================================\n";
     std::cout << " Select project: ";
@@ -387,9 +562,9 @@ int main() {
         case 2:
             project_3_2();
             break;
-        // case 3:
-        //     project_3_3();
-        //     break;
+        case 3:
+            project_3_3();
+            break;
         case 0:
             std::cout << "Exiting.\n";
             return 0;
