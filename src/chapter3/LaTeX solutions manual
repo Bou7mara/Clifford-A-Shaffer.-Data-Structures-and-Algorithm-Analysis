@@ -474,4 +474,55 @@ $T(2n) = 2^{(2n)^{\log_2 3}}
        = \bigl(2^{n^{\log_2 3}}\bigr)^{3}
        = \bigl[T(n)\bigr]^{3}.\;\checkmark$
 
+
+
+% =============================================================
+%  EXERCISE 3.7
+% =============================================================
+\exercise{3.7}
+
+\textbf{Definition (Big-Oh).}\;
+$f(n) \in O(g(n))$ if and only if there exist positive constants $c$
+and $n_0$ such that
+\[
+    f(n) \;\le\; c\,g(n) \quad \text{for all } n \ge n_0.
+\]
+
+\bigskip
+
+\textbf{(a)}\; Show that $1 \in O(1)$.
+
+\textit{Proof.}\;
+Let $f(n) = 1$ and $g(n) = 1$.  Choose $c = 1$ and $n_0 = 1$.
+Then for all $n \ge 1$:
+\[
+    f(n) = 1 \;\le\; 1 \cdot 1 = c\,g(n).
+\]
+The condition of the definition is satisfied, so
+\[
+    \boxed{1 \in O(1).} \qquad \checkmark
+\]
+
+\bigskip
+
+\textbf{(b)}\; Show that $1 \in O(n)$.
+
+\textit{Proof.}\;
+Let $f(n) = 1$ and $g(n) = n$.  Choose $c = 1$ and $n_0 = 1$.
+Then for all $n \ge 1$:
+\[
+    f(n) = 1 \;\le\; n = 1 \cdot n = c\,g(n),
+\]
+since $n \ge 1$ for all $n \ge n_0 = 1$.
+The condition is satisfied, so
+\[
+    \boxed{1 \in O(n).} \qquad \checkmark
+\]
+
+\medskip
+\textit{Remark.}\;
+This illustrates that big-Oh is an \emph{upper bound}, not a tight one.
+A constant function is trivially dominated by a linear one, so membership
+in $O(n)$ is a weaker (less informative) claim than membership in $O(1)$.
+
 \end{document}
