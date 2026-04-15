@@ -584,4 +584,36 @@ We assume that all constants $c_i$ are positive.
           Choose $c = c_6$ and $n_0 = 1$.
 \end{itemize}
 
+% =============================================================
+%  EXERCISE 3.9
+% =============================================================
+\exercise{3.9}
+
+\textbf{(a)}\; What is the smallest integer $k$ such that $\sqrt{n} = O(n^k)$?
+
+By definition, $\sqrt{n} = n^{0.5}$. We want the smallest integer $k$ such that $n^{0.5} \le c\,n^k$ for $n \ge n_0$.
+Since $k$ must be an integer:
+\begin{itemize}
+    \item For $k = 0$: $n^0 = 1$, which does not upper-bound $n^{0.5}$.
+    \item For $k = 1$: $n^1 = n$. Since $n^{0.5} \le n$ for all $n \ge 1$, we have $\sqrt{n} \in O(n^1)$.
+\end{itemize}
+Therefore, the smallest integer is
+\[
+    \boxed{k = 1}
+\]
+
+\bigskip
+
+\textbf{(b)}\; What is the smallest integer $k$ such that $n \log n = O(n^k)$?
+
+We need the smallest integer $k$ such that $n \log n \le c\,n^k$ for $n \ge n_0$.
+\begin{itemize}
+    \item For $k = 1$: We would need $n \log n \le c\,n \implies \log n \le c$, which is false for unbounded $n$. Thus, $n \log n \notin O(n)$.
+    \item For $k = 2$: We need $n \log n \le c\,n^2 \implies \log n \le c\,n$. We know that logarithmic growth is strictly slower than linear growth. For instance, $\log_2 n \le n$ for all $n \ge 1$. Thus, $n \log n \in O(n^2)$.
+\end{itemize}
+Therefore, the smallest integer is
+\[
+    \boxed{k = 2}
+\]
+
 \end{document}
