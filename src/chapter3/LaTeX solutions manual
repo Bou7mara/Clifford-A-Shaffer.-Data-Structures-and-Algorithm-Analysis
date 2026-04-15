@@ -406,4 +406,72 @@ $2^{n}$, it only \emph{adds} a constant ($\approx 6.64$) a much
 smaller improvement, illustrating why exponential algorithms scale so
 poorly.
 
+
+
+% =============================================================
+%  EXERCISE 3.6
+% =============================================================
+\exercise{3.6}
+
+\textbf{Setup.}\;
+We seek a growth-rate function $T(n)$ with a specific self-squaring
+(or self-cubing) property when the input size is doubled.
+We try the ansatz $T(n) = 2^{n^{k}}$ and solve for~$k$.
+
+\bigskip
+
+\textbf{(a)}\; Find $T$ such that $T(2n) = \bigl[T(n)\bigr]^{2}$.
+
+Let $T(n) = 2^{n^{k}}$.  Then
+\[
+    T(2n) = 2^{(2n)^{k}} = 2^{2^{k}\,n^{k}},
+    \qquad
+    \bigl[T(n)\bigr]^{2} = 2^{2\,n^{k}}.
+\]
+Equating exponents:
+\[
+    2^{k}\,n^{k} = 2\,n^{k}
+    \;\Longrightarrow\;
+    2^{k} = 2
+    \;\Longrightarrow\;
+    k = 1.
+\]
+\[
+    \boxed{T(n) = 2^{n}}
+\]
+
+\smallskip
+\textit{Verification:}\;
+$T(2n) = 2^{2n} = \bigl(2^{n}\bigr)^{2} = \bigl[T(n)\bigr]^{2}.\;\checkmark$
+
+\bigskip
+
+\textbf{(b)}\; Find $T$ such that $T(2n) = \bigl[T(n)\bigr]^{3}$.
+
+Again let $T(n) = 2^{n^{k}}$.  Then
+\[
+    T(2n) = 2^{(2n)^{k}} = 2^{2^{k}\,n^{k}},
+    \qquad
+    \bigl[T(n)\bigr]^{3} = 2^{3\,n^{k}}.
+\]
+Equating exponents:
+\[
+    2^{k}\,n^{k} = 3\,n^{k}
+    \;\Longrightarrow\;
+    2^{k} = 3
+    \;\Longrightarrow\;
+    k = \log_{2} 3.
+\]
+\[
+    \boxed{T(n) = 2^{\,n^{\log_{2} 3}}}
+\]
+
+\smallskip
+\textit{Verification:}\;
+$T(2n) = 2^{(2n)^{\log_2 3}}
+       = 2^{2^{\log_2 3}\,n^{\log_2 3}}
+       = 2^{3\,n^{\log_2 3}}
+       = \bigl(2^{n^{\log_2 3}}\bigr)^{3}
+       = \bigl[T(n)\bigr]^{3}.\;\checkmark$
+
 \end{document}
