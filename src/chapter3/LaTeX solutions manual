@@ -648,4 +648,108 @@ Focusing on the lower bound, dividing both sides by $3^n$ gives:
 \]
 Since $\frac{2}{3} < 1$, as $n \to \infty$, the term $\left(\frac{2}{3}\right)^n \to 0$. In order for the inequality to hold for all arbitrarily large $n$, $c_1$ would have to be $\le 0$. However, by definition, $c_1$ must be a strictly positive constant ($c_1 > 0$). Since no such constant can exist, $2^n$ is not bounded below by a positive multiple of $3^n$. Thus, $\boxed{2^n \notin \Theta(3^n)}$.
 
+% =============================================================
+%  EXERCISE 3.11
+% =============================================================
+\exercise{3.11}
+
+In Section 3.4.5, the Method of Limits states that we compute $L = \lim_{n \to \infty} \frac{f(n)}{g(n)}$.
+\begin{itemize}
+    \item If $0 < L < \infty$, then $f(n) \in \Theta(g(n))$.
+    \item If $L = 0$, then $f(n) \in O(g(n))$ (but not $\Theta$).
+    \item If $L = \infty$, then $f(n) \in \Omega(g(n))$ (but not $\Theta$).
+\end{itemize}
+
+\bigskip
+
+\textbf{(a)}\; $f(n) = \log n^2$; $g(n) = \log n + 5$
+\[
+    L = \lim_{n \to \infty} \frac{\log n^2}{\log n + 5} = \lim_{n \to \infty} \frac{2 \log n}{\log n + 5} = \lim_{n \to \infty} \frac{2}{1 + \frac{5}{\log n}} = 2
+\]
+Since $0 < L < \infty$, $\boxed{f(n) \in \Theta(g(n))}$.
+
+\medskip
+
+\textbf{(b)}\; $f(n) = \sqrt{n}$; $g(n) = \log n^2$
+\[
+    L = \lim_{n \to \infty} \frac{\sqrt{n}}{2 \log n} = \infty
+\]
+(By L'H\^opital's Rule, $\lim \frac{\frac{1}{2\sqrt{n}}}{2/n} = \lim \frac{n}{4\sqrt{n}} = \lim \frac{\sqrt{n}}{4} = \infty$).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(c)}\; $f(n) = \log^2 n$; $g(n) = \log n$
+\[
+    L = \lim_{n \to \infty} \frac{(\log n)^2}{\log n} = \lim_{n \to \infty} \log n = \infty
+\]
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(d)}\; $f(n) = n$; $g(n) = \log^2 n$
+\[
+    L = \lim_{n \to \infty} \frac{n}{(\log n)^2} = \infty
+\]
+(Polynomials grow faster than any power of logarithms).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(e)}\; $f(n) = n \log n + n$; $g(n) = \log n$
+\[
+    L = \lim_{n \to \infty} \frac{n \log n + n}{\log n} = \lim_{n \to \infty} \left(n + \frac{n}{\log n}\right) = \infty
+\]
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(f)}\; $f(n) = \log n^2$; $g(n) = (\log n)^2$
+\[
+    L = \lim_{n \to \infty} \frac{2 \log n}{(\log n)^2} = \lim_{n \to \infty} \frac{2}{\log n} = 0
+\]
+Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
+
+\medskip
+
+\textbf{(g)}\; $f(n) = 10$; $g(n) = \log 10$
+\[
+    L = \lim_{n \to \infty} \frac{10}{\log 10} = c \approx 4.34
+\]
+Since $0 < L < \infty$ (both are constants), $\boxed{f(n) \in \Theta(g(n))}$.
+
+\medskip
+
+\textbf{(h)}\; $f(n) = 2^n$; $g(n) = 10n^2$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{10n^2} = \infty
+\]
+(Exponentials grow strictly faster than polynomials).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(i)}\; $f(n) = 2^n$; $g(n) = n \log n$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{n \log n} = \infty
+\]
+(Exponentials grow strictly faster than $n \log n$).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(j)}\; $f(n) = 2^n$; $g(n) = 3^n$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{3^n} = \lim_{n \to \infty} \left(\frac{2}{3}\right)^n = 0
+\]
+Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
+
+\medskip
+
+\textbf{(k)}\; $f(n) = 2^n$; $g(n) = n^n$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{n^n} = \lim_{n \to \infty} \left(\frac{2}{n}\right)^n = 0
+\]
+Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
+
 \end{document}
