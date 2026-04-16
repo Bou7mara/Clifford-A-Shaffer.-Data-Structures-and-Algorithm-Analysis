@@ -752,4 +752,207 @@ Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
 \]
 Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
 
+% =============================================================
+%  EXERCISE 3.12
+% =============================================================
+\exercise{3.12}
+
+\textbf{(a)}
+\begin{verbatim}
+  a = b + c;
+  d = a + e;
+\end{verbatim}
+This consists of two basic, constant-time operations. The runtime is unaffected by any input size $n$.
+\[
+    \boxed{\Theta(1)}
+\]
+
+\medskip
+
+\textbf{(b)}
+\begin{verbatim}
+  sum = 0;
+  for (i=0; i<3; i++)
+    for (j=0; j<n; j++)
+      sum++;
+\end{verbatim}
+The inner loop executes $n$ times. The outer loop executes a constant 3 times. The total number of operations is $3n$.
+\[
+    \boxed{\Theta(n)}
+\]
+
+\medskip
+
+\textbf{(c)}
+\begin{verbatim}
+  sum=0;
+  for (i=0; i<n*n; i++)
+    sum++;
+\end{verbatim}
+The loop executes exactly $n^2$ times.
+\[
+    \boxed{\Theta(n^2)}
+\]
+
+\medskip
+
+\textbf{(d)}
+\begin{verbatim}
+  for (i=0; i < n-1; i++)
+    for (j=i+1; j < n; j++) {
+      ...
+    }
+\end{verbatim}
+The outer loop goes from $0$ to $n-2$. The inner loop iterates $n - 1 - i$ times. The total number of iterations is the sum of the first $n-1$ integers: $\sum_{i=1}^{n-1} i = \frac{n(n-1)}{2} \approx \frac{1}{2}n^2$.
+\[
+    \boxed{\Theta(n^2)}
+\]
+
+\medskip
+
+\textbf{(e)}
+\begin{verbatim}
+  sum = 0;
+  for (i=1; i<=n; i++)
+    for (j=1; j<=n; j*=2)
+      sum++;
+\end{verbatim}
+The inner loop doubles $j$ each iteration, running $\approx \log_2 n$ times. The outer loop runs $n$ times. The total number of iterations is $n \log_2 n$.
+\[
+    \boxed{\Theta(n \log n)}
+\]
+
+\medskip
+
+\textbf{(f)}
+\begin{verbatim}
+  sum = 0;
+  for (i=1; i<=n; i*=2)
+    for (j=1; j<=n; j++)
+      sum++;
+\end{verbatim}
+The outer loop doubles $i$ each iteration, running $\approx \log_2 n$ times. The inner loop iterates $n$ times during each outer loop. Total iterations: $n \log_2 n$.
+\[
+    \boxed{\Theta(n \log n)}
+\]
+
+\medskip
+
+\textbf{(g)}
+\begin{verbatim}
+  for (i=0; i<n; i++) {
+    for (j=0; j<n; j++)
+      A[j] = Random(n);
+    sort(A, n);
+  }
+\end{verbatim}
+Inside the outer loop, the inner loop takes $\Theta(n)$ time. The \texttt{sort} function takes $\Theta(n \log n)$ time. Therefore, each iteration of the outer loop takes $\Theta(n + n \log n) = \Theta(n \log n)$ time. The outer loop runs $n$ times, yielding a total runtime of $n \times \Theta(n \log n)$.
+\[
+    \boxed{\Theta(n^2 \log n)}
+\]
+
+\medskip
+
+\textbf{(h)}
+\begin{verbatim}
+  sum = 0;
+  for (i=0; i<n; i++)
+    for (j=0; A[j]!=i; j++)
+      sum++;
+\end{verbatim}
+Array $A$ contains a random permutation of values from $0$ to $n-1$. The inner loop acts as a linear search for the value $i$. On average, the inner loop will examine half the array before finding $i$, executing $n/2$ iterations. Over $n$ total searches, the average total iterations is $n \times (n/2) = \frac{1}{2}n^2$.
+\[
+    \boxed{\Theta(n^2)}
+\]
+
+\medskip
+
+\textbf{(i)}
+\begin{verbatim}
+  sum = 0;
+  if (EVEN(n))
+    for (i=0; i<n; i++)
+      sum++;
+  else
+    sum = sum + n;
+\end{verbatim}
+When $n$ is EVEN, the loop runs $n$ times: $\Theta(n)$. When $n$ is ODD, no loop runs: $\Theta(1)$. In the average case, we assume there is an equal probability of $n$ being EVEN or ODD. The expected average runtime is therefore $\frac{c_1 n + c_2}{2}$, which scales linearly with $n$.
+\[
+    \boxed{\Theta(n)}
+\]
+
+% =============================================================
+%  EXERCISE 3.13
+% =============================================================
+\exercise{3.13}
+
+Show that big-Theta notation ($\Theta$) defines an equivalence relation on the set of functions.
+
+\textbf{Proof:} To show that $\Theta$ defines an equivalence relation, we must demonstrate that it is reflexive, symmetric, and transitive.
+
+\begin{enumerate}
+    \item \textbf{Reflexivity} ($f(n) \in \Theta(f(n))$):
+    For any $n \ge 1$, it is trivially true that:
+    \[
+        1 \cdot f(n) \le f(n) \le 1 \cdot f(n)
+    \]
+    We can choose constants $c_1 = 1$, $c_2 = 1$, and $n_0 = 1$. Both conditions hold, so reflexivity is satisfied.
+
+    \item \textbf{Symmetry} (If $f(n) \in \Theta(g(n))$, then $g(n) \in \Theta(f(n))$):
+    If $f(n) \in \Theta(g(n))$, there exist positive constants $c_1, c_2,$ and $n_0$ such that for all $n \ge n_0$:
+    \[
+        c_1 g(n) \le f(n) \le c_2 g(n)
+    \]
+    By dividing both inequalities by $c_1$ and $c_2$ respectively, we obtain:
+    \[
+        \frac{1}{c_2} f(n) \le g(n) \le \frac{1}{c_1} f(n)
+    \]
+    Since $c_1$ and $c_2$ are strictly positive constants, $\frac{1}{c_2}$ and $\frac{1}{c_1}$ are also strictly positive constants. This fits the definition of $g(n) \in \Theta(f(n))$.
+
+    \item \textbf{Transitivity} (If $f(n) \in \Theta(g(n))$ and $g(n) \in \Theta(h(n))$, then $f(n) \in \Theta(h(n))$):
+    From the definitions, there exist positive constants such that:
+    \[
+        c_1 g(n) \le f(n) \le c_2 g(n) \quad \text{for all } n \ge n_1
+    \]
+    \[
+        c_3 h(n) \le g(n) \le c_4 h(n) \quad \text{for all } n \ge n_2
+    \]
+    Combining these inequalities for $n \ge \max(n_1, n_2)$, we substitute $g(n)$:
+    \[
+        c_1(c_3 h(n)) \le c_1 g(n) \le f(n) \le c_2 g(n) \le c_2(c_4 h(n))
+    \]
+    This simplifies to:
+    \[
+        (c_1 c_3) h(n) \le f(n) \le (c_2 c_4) h(n)
+    \]
+    Since $c_1, c_2, c_3, c_4$ are all positive constants, their products $c_1 c_3$ and $c_2 c_4$ are also positive constants. Thus, $f(n) \in \Theta(h(n))$.
+\end{enumerate}
+
+Since the relationship is reflexive, symmetric, and transitive, $\Theta$ is an \textbf{equivalence relation}. $\blacksquare$
+
+% =============================================================
+%  EXERCISE 3.14
+% =============================================================
+\exercise{3.14}
+
+Give the best lower bound that you can for the following code fragment, as a function of the initial value of $n$.
+\begin{verbatim}
+  while (n > 1)
+    if (ODD(n))
+      n = 3 * n + 1;
+    else
+      n = n / 2;
+\end{verbatim}
+
+\textbf{Answer:} This code calculates the sequence of the famous Collatz conjecture. We are asked for the best \textit{lower bound} ($\Omega$) for its execution time.
+
+To find the minimum possible number of iterations, we consider the scenario where $n$ decreases to $1$ as fast as mathematically possible. The condition \texttt{n = n / 2} halves the value, whereas the condition \texttt{n = 3 * n + 1} more than triples it. Thus, the fastest path to $1$ occurs when $n$ is always EVEN (i.e., $n$ is initially a power of $2$, $n = 2^k$).
+
+If $n = 2^k$, the \texttt{else} block will be executed exactly $k$ times until $n=1$. The number of iterations is $k = \log_2 n$.
+
+Since the number of iterations can never be fewer than $\log_2 n$ (it cannot decrease faster than halving at each step), the best lower bound for the execution of this code fragment is:
+\[
+    \boxed{\Omega(\log n)}
+\]
+
 \end{document}
