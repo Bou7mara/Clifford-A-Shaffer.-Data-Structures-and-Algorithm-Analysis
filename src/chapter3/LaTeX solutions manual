@@ -8,12 +8,18 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usepackage{amsmath, amssymb}
+\usepackage{amsmath, amssymb, amsthm}
 \usepackage{enumitem}                   % fine-grained list control
 \usepackage{fancyhdr}                   % headers / footers
 \usepackage{titlesec}                   % section styling
 \usepackage[hidelinks]{hyperref}        % clickable TOC, no ugly boxes
 \usepackage{microtype}                  % better typographic fitting
+\usepackage{listings}                   % syntax-highlighted code
+\usepackage{tocloft}
+
+% Increase spacing in Table of Contents
+\setlength{\cftbeforesecskip}{6pt}      % space between sections
+\setlength{\cftbeforesubsecskip}{4pt}   % space between subsections
 
 % ======================== PGFPLOTS ========================
 \pgfplotsset{compat=1.18}
@@ -32,6 +38,26 @@
 
 % ======================== GEOMETRY ========================
 \geometry{margin=2.5cm}
+
+% ======================== LISTINGS ========================
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries\color{sectionblue},
+    commentstyle=\itshape\color{plotB},
+    numbers=none,
+    frame=single,
+    framerule=0.4pt,
+    rulecolor=\color{black!30},
+    backgroundcolor=\color{black!3},
+    breaklines=true,
+    language=C++,
+    showstringspaces=false,
+    tabsize=4,
+    xleftmargin=1em,
+    xrightmargin=1em,
+    aboveskip=1em,
+    belowskip=1em
+}
 
 % ======================== HEADERS =========================
 \pagestyle{fancy}
@@ -55,6 +81,7 @@
 
 % ======================== COMMANDS ========================
 \newcommand{\exercise}[1]{%
+  \phantomsection
   \subsection*{Exercise #1}%
   \addcontentsline{toc}{subsection}{Exercise #1}%
 }
@@ -120,14 +147,21 @@
 
 \end{center}
 
-% ------------------- CONTENT PAGES ------------------------
+
+
+% ------------------- CONTENT PAGES -------------------
 \newpage
 \restoregeometry
 \pagecolor{white}
 \color{black}
 \pagenumbering{arabic}
 
+% Table of Contents
+{
+\tableofcontents
+}
 
+\newpage
 
 
 % =============================================================
@@ -402,7 +436,7 @@ $100\,T(n)$ units of work.  We need $n'$ such that
 \medskip
 Observation: For polynomial-time algorithms, the speed-up \emph{multiplies} the
 solvable input size by a constant factor.  For the exponential algorithm
-$2^{n}$, it only \emph{adds} a constant ($\approx 6.64$) a much
+$2^{n}$, it only \emph{adds} a constant ($\approx 6.64$)---a much
 smaller improvement, illustrating why exponential algorithms scale so
 poorly.
 
@@ -714,9 +748,10 @@ Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
 
 \textbf{(g)}\; $f(n) = 10$; $g(n) = \log 10$
 \[
-    L = \lim_{n \to \infty} \frac{10}{\log 10} = c \approx 4.34
+    L = \lim_{n \to \infty} \frac{10}{\log 10}
 \]
-Since $0 < L < \infty$ (both are constants), $\boxed{f(n) \in \Theta(g(n))}$.
+Both $f$ and $g$ are constants (independent of $n$), so the ratio is a finite positive constant.
+Since $0 < L < \infty$, $\boxed{f(n) \in \Theta(g(n))}$.
 
 \medskip
 
@@ -758,10 +793,10 @@ Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
 \exercise{3.12}
 
 \textbf{(a)}
-\begin{verbatim}
+\begin{lstlisting}
   a = b + c;
   d = a + e;
-\end{verbatim}
+\end{lstlisting}
 This consists of two basic, constant-time operations. The runtime is unaffected by any input size $n$.
 \[
     \boxed{\Theta(1)}
@@ -770,12 +805,12 @@ This consists of two basic, constant-time operations. The runtime is unaffected 
 \medskip
 
 \textbf{(b)}
-\begin{verbatim}
+\begin{lstlisting}
   sum = 0;
   for (i=0; i<3; i++)
     for (j=0; j<n; j++)
       sum++;
-\end{verbatim}
+\end{lstlisting}
 The inner loop executes $n$ times. The outer loop executes a constant 3 times. The total number of operations is $3n$.
 \[
     \boxed{\Theta(n)}
@@ -784,11 +819,11 @@ The inner loop executes $n$ times. The outer loop executes a constant 3 times. T
 \medskip
 
 \textbf{(c)}
-\begin{verbatim}
+\begin{lstlisting}
   sum=0;
   for (i=0; i<n*n; i++)
     sum++;
-\end{verbatim}
+\end{lstlisting}
 The loop executes exactly $n^2$ times.
 \[
     \boxed{\Theta(n^2)}
@@ -797,12 +832,12 @@ The loop executes exactly $n^2$ times.
 \medskip
 
 \textbf{(d)}
-\begin{verbatim}
+\begin{lstlisting}
   for (i=0; i < n-1; i++)
     for (j=i+1; j < n; j++) {
       ...
     }
-\end{verbatim}
+\end{lstlisting}
 The outer loop goes from $0$ to $n-2$. The inner loop iterates $n - 1 - i$ times. The total number of iterations is the sum of the first $n-1$ integers: $\sum_{i=1}^{n-1} i = \frac{n(n-1)}{2} \approx \frac{1}{2}n^2$.
 \[
     \boxed{\Theta(n^2)}
@@ -811,12 +846,12 @@ The outer loop goes from $0$ to $n-2$. The inner loop iterates $n - 1 - i$ times
 \medskip
 
 \textbf{(e)}
-\begin{verbatim}
+\begin{lstlisting}
   sum = 0;
   for (i=1; i<=n; i++)
     for (j=1; j<=n; j*=2)
       sum++;
-\end{verbatim}
+\end{lstlisting}
 The inner loop doubles $j$ each iteration, running $\approx \log_2 n$ times. The outer loop runs $n$ times. The total number of iterations is $n \log_2 n$.
 \[
     \boxed{\Theta(n \log n)}
@@ -825,12 +860,12 @@ The inner loop doubles $j$ each iteration, running $\approx \log_2 n$ times. The
 \medskip
 
 \textbf{(f)}
-\begin{verbatim}
+\begin{lstlisting}
   sum = 0;
   for (i=1; i<=n; i*=2)
     for (j=1; j<=n; j++)
       sum++;
-\end{verbatim}
+\end{lstlisting}
 The outer loop doubles $i$ each iteration, running $\approx \log_2 n$ times. The inner loop iterates $n$ times during each outer loop. Total iterations: $n \log_2 n$.
 \[
     \boxed{\Theta(n \log n)}
@@ -839,13 +874,13 @@ The outer loop doubles $i$ each iteration, running $\approx \log_2 n$ times. The
 \medskip
 
 \textbf{(g)}
-\begin{verbatim}
+\begin{lstlisting}
   for (i=0; i<n; i++) {
     for (j=0; j<n; j++)
       A[j] = Random(n);
     sort(A, n);
   }
-\end{verbatim}
+\end{lstlisting}
 Inside the outer loop, the inner loop takes $\Theta(n)$ time. The \texttt{sort} function takes $\Theta(n \log n)$ time. Therefore, each iteration of the outer loop takes $\Theta(n + n \log n) = \Theta(n \log n)$ time. The outer loop runs $n$ times, yielding a total runtime of $n \times \Theta(n \log n)$.
 \[
     \boxed{\Theta(n^2 \log n)}
@@ -854,12 +889,12 @@ Inside the outer loop, the inner loop takes $\Theta(n)$ time. The \texttt{sort} 
 \medskip
 
 \textbf{(h)}
-\begin{verbatim}
+\begin{lstlisting}
   sum = 0;
   for (i=0; i<n; i++)
     for (j=0; A[j]!=i; j++)
       sum++;
-\end{verbatim}
+\end{lstlisting}
 Array $A$ contains a random permutation of values from $0$ to $n-1$. The inner loop acts as a linear search for the value $i$. On average, the inner loop will examine half the array before finding $i$, executing $n/2$ iterations. Over $n$ total searches, the average total iterations is $n \times (n/2) = \frac{1}{2}n^2$.
 \[
     \boxed{\Theta(n^2)}
@@ -868,14 +903,14 @@ Array $A$ contains a random permutation of values from $0$ to $n-1$. The inner l
 \medskip
 
 \textbf{(i)}
-\begin{verbatim}
+\begin{lstlisting}
   sum = 0;
   if (EVEN(n))
     for (i=0; i<n; i++)
       sum++;
   else
     sum = sum + n;
-\end{verbatim}
+\end{lstlisting}
 When $n$ is EVEN, the loop runs $n$ times: $\Theta(n)$. When $n$ is ODD, no loop runs: $\Theta(1)$. In the average case, we assume there is an equal probability of $n$ being EVEN or ODD. The expected average runtime is therefore $\frac{c_1 n + c_2}{2}$, which scales linearly with $n$.
 \[
     \boxed{\Theta(n)}
@@ -888,7 +923,8 @@ When $n$ is EVEN, the loop runs $n$ times: $\Theta(n)$. When $n$ is ODD, no loop
 
 Show that big-Theta notation ($\Theta$) defines an equivalence relation on the set of functions.
 
-\textbf{Proof:} To show that $\Theta$ defines an equivalence relation, we must demonstrate that it is reflexive, symmetric, and transitive.
+\begin{proof}
+To show that $\Theta$ defines an equivalence relation, we must demonstrate that it is reflexive, symmetric, and transitive.
 
 \begin{enumerate}
     \item \textbf{Reflexivity} ($f(n) \in \Theta(f(n))$):
@@ -928,7 +964,8 @@ Show that big-Theta notation ($\Theta$) defines an equivalence relation on the s
     Since $c_1, c_2, c_3, c_4$ are all positive constants, their products $c_1 c_3$ and $c_2 c_4$ are also positive constants. Thus, $f(n) \in \Theta(h(n))$.
 \end{enumerate}
 
-Since the relationship is reflexive, symmetric, and transitive, $\Theta$ is an \textbf{equivalence relation}. $\blacksquare$
+Since the relationship is reflexive, symmetric, and transitive, $\Theta$ is an \textbf{equivalence relation}.
+\end{proof}
 
 % =============================================================
 %  EXERCISE 3.14
@@ -936,13 +973,13 @@ Since the relationship is reflexive, symmetric, and transitive, $\Theta$ is an \
 \exercise{3.14}
 
 Give the best lower bound that you can for the following code fragment, as a function of the initial value of $n$.
-\begin{verbatim}
+\begin{lstlisting}
   while (n > 1)
     if (ODD(n))
       n = 3 * n + 1;
     else
       n = n / 2;
-\end{verbatim}
+\end{lstlisting}
 
 \textbf{Answer:} This code calculates the sequence of the famous Collatz conjecture. We are asked for the best \textit{lower bound} ($\Omega$) for its execution time.
 
@@ -954,5 +991,242 @@ Since the number of iterations can never be fewer than $\log_2 n$ (it cannot dec
 \[
     \boxed{\Omega(\log n)}
 \]
+
+% =============================================================
+%  EXERCISE 3.15
+% =============================================================
+\exercise{3.15}
+
+Does every algorithm have a $\Theta$ running-time equation? In other words, are the upper and lower bounds for the running time (on any specified class of inputs) always the same?
+
+\textbf{Yes}, for any \textit{specific} class of inputs (e.g., worst-case only, or best-case only), every algorithm does have a $\Theta$ running-time equation. This is because, for a fixed class, the running time $T(n)$ is a single well-defined function of $n$, and every such function is $\Theta$ of itself.
+
+\textbf{However}, if we interpret the question as asking whether the upper and lower bounds across \textit{different} classes of inputs are always the same, then the answer is \textbf{no}. For example, sequential search has a worst-case cost of $\Theta(n)$ and a best-case cost of $\Theta(1)$. The bounds differ across input classes, so there is no single $\Theta$ expression that describes the algorithm's running time for \textit{all} inputs of size $n$.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.16
+% =============================================================
+\exercise{3.16}
+
+Does every problem for which there exists some algorithm have a $\Theta$ running-time equation? In other words, for every problem, and for any specified class of inputs, is there some algorithm whose upper bound is equal to the problem’s lower bound?
+
+\textbf{No.} There are two primary reasons why a problem might not have a tight $\Theta$ running-time equation:
+\begin{enumerate}
+    \item \textbf{Unknown Optimal Algorithms:} For many complex problems (such as matrix multiplication), there is a gap between the theoretically proven lower bound (e.g., $\Omega(n^2)$) and the best-known algorithm's upper bound. We simply don't yet know if an algorithm exists that perfectly matches the minimum necessary bound for the problem.
+    \item \textbf{Blum's Speedup Theorem:} In theoretical computer science, Blum's Speedup Theorem mathematically proves the existence of computable problems that \textit{do not possess any optimal algorithm}. For any possible algorithm that solves such a problem, there exists another algorithm that is significantly faster. Therefore, there is no "best" algorithm whose upper bound matches the problem's fundamental lower bound.
+\end{enumerate}
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.17
+% =============================================================
+\exercise{3.17}
+
+Given an array storing integers ordered by value, modify the binary search routine to return the position of the first integer with value $K$ in the situation where $K$ can appear multiple times. Be sure that your algorithm is $\Theta(\log n)$.
+
+\textbf{Answer:} To maintain the strict $\Theta(\log n)$ bound, we cannot drop into a sequential $O(n)$ footprint upon finding $K$. Instead, we must continue the binary search in the left half of the array whenever we encounter $K$ to look for earlier occurrences.
+
+\begin{lstlisting}
+int first_occurrence_binary_search(int A[], int n, int K) {
+    int low = 0, high = n - 1;
+    int first_pos = -1; // Initialize to -1 (not found)
+    
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (A[mid] == K) {
+            first_pos = mid;    // Record position of K
+            high = mid - 1;     // Important: Search left for earlier occurrences
+        } 
+        else if (A[mid] < K) {
+            low = mid + 1;
+        } 
+        else {
+            high = mid - 1;
+        }
+    }
+    return first_pos;
+}
+\end{lstlisting}
+
+Because the \texttt{while} loop strictly continues to halve the search space at every step regardless of whether $K$ is found, the routine completes in precisely $\Theta(\log n)$ comparisons.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.18
+% =============================================================
+\exercise{3.18}
+
+Given an array storing integers ordered by value, modify the binary search routine to return the position of the integer with the greatest value less than $K$ when $K$ itself does not appear in the array. Return \texttt{ERROR} if the least value in the array is greater than $K$.
+
+\textbf{Answer:} When a standard binary search finishes without finding the element, the \texttt{low} and \texttt{high} pointers cross. In this failed crossing state, the \texttt{high} point index naturally rests at exactly the position of the greatest element less than $K$.
+
+\begin{lstlisting}
+int greatest_less_than(int A[], int n, int K) {
+    int low = 0, high = n - 1;
+    
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (A[mid] < K) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    
+    // 'high' is now the index of the largest element < K.
+    if (high < 0)
+        return ERROR; // K is smaller than all elements
+    return high;
+}
+\end{lstlisting}
+
+\textit{Note:} Since the problem states $K$ does not appear in the array, we only need two branches. When the loop terminates, \texttt{high} naturally points to the greatest value less than $K$.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.19
+% =============================================================
+\exercise{3.19}
+
+Modify the binary search routine to support search in an array of infinite size. Provide an algorithm that can determine the position $n$ boundary in $O(\log n)$ comparisons.
+
+\textbf{Answer:} To search an infinite array, we first need to explicitly and dynamically discover an upper bound for the index. We can do this efficiently using \textbf{Exponential Search} (also known as scaling search operations).
+
+\textbf{Algorithm Steps:}
+\begin{enumerate}
+    \item We start at index $i = 1$.
+    \item We repeatedly double the bounded index ($i = i \times 2$) checking the array limit condition until $A[i] \ge K$.
+    \item Once an upper bound $i$ (which equals $2^k$) is found, we know the object $K$ must lay strictly between indices $2^{k-1}$ and $2^k$.
+    \item We perform a standard restricted binary search to the finite subarray $A[2^{k-1} \dots 2^k]$.
+\end{enumerate}
+
+\textbf{Time Bound Analysis:}
+If the smallest value $\ge K$ rests at position $n$, then stepping dynamically in powers of $2$ requires $k \approx \log_2 n$ steps to successfully overshoot $n$. Scanning iteratively for an upper bound therefore takes exactly $O(\log n)$ steps.
+
+Upon finding our limited subarray boundary, applying standard binary search to the interval of size proportional to $2^k - 2^{k-1} = 2^{k-1} \approx \frac{n}{2}$ takes exactly $\log_2(n/2) = \log_2 n - 1 = O(\log n)$ time structure. 
+
+The combined sequential time of dynamic binding and searching is $O(\log n) + O(\log n) = \boxed{O(\log n)}$.
+
+% =============================================================
+%  EXERCISE 3.20
+% =============================================================
+\exercise{3.20}
+
+\textbf{(a)} If the dividing point computation is $i = l + (r - l)/3$, the array is split into two partitions of roughly $1/3$ and $2/3$ size. In the worst case, the target element will always fall into the larger $2/3$ partition. 
+The size of the subarray at step $k$ is $n (2/3)^k$. Setting this to 1 yields:
+\[
+    k = \log_{3/2} n
+\]
+In asymptotic terms, the running time is still $\boxed{\Theta(\log n)}$. 
+To compare the speed with standard binary search ($\log_2 n$), we use the change of base formula:
+\[
+    \log_{3/2} n = \frac{\log_2 n}{\log_2(3/2)} = \frac{\log_2 n}{\log_2 3 - \log_2 2} \approx \frac{\log_2 n}{1.585 - 1} \approx 1.71 \log_2 n
+\]
+Thus, the modified program will be approximately \textbf{1.71 times slower} than the standard binary search.
+
+\bigskip
+
+\textbf{(b)} If the computation is changed to $i = r - 2$, the array is partitioned into sizes of roughly $n - 3$ and $2$. In the worst case, the target element is always in the larger partition, causing the search space to shrink by only a constant $3$ elements per step.
+The number of steps required to reduce $n$ to $1$ is roughly $n / 3$. 
+In asymptotic terms, the running time decays to $\boxed{\Theta(n)}$.
+Because the complexity shifts from logarithmic to linear, it is an asymptotic difference, not just a constant factor. For any moderately large $n$, it will be \textbf{massively slower}.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.21
+% =============================================================
+\exercise{3.21}
+
+\textbf{Algorithm Design:}
+Since the \texttt{compare} function only tells us if two pieces are adjacent (an exact match), there is no transitive mathematical property (like greater-than/less-than) that would allow us to sort the pieces organically in $O(N \log N)$ time. We must use targeted iterative searches. Let $N = n \times m$ be the total pieces.
+
+\begin{enumerate}
+    \item Start by picking an arbitrary piece (or explicitly finding a corner piece) and place it at the first $(0,0)$ position in our grid.
+    \item For every subsequent position in the $n \times m$ grid, look at the physically required adjacent pieces that have already been placed (e.g., the piece immediately to the left, or the piece above).
+    \item Iterate through the pool of remaining unplaced pieces, testing them against the placed adjacent piece using the $O(1)$ \texttt{compare} function.
+    \item When the match is found, permanently place the piece into the matrix and explicitly remove it from the pool of unplaced candidates.
+\end{enumerate}
+
+\textbf{Summation and Closed-Form:}
+For the first piece, we expend 0 compares. For the second piece, we may search up to $N-1$ pieces. For the third, $N-2$ pieces, and so on. To place the $k$-th piece, we must search through the remaining $N - k + 1$ pieces. 
+In the absolute worst case, the total number of comparisons is the sum of the remaining pieces:
+\[
+    \sum_{k=1}^{N-1} (N - k) \;=\; \sum_{i=1}^{N-1} i
+\]
+Using the fundamental arithmetic series formula, the closed-form solution is:
+\[
+    \boxed{\frac{N(N-1)}{2} \implies \Theta(N^2)}
+\]
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.22
+% =============================================================
+\exercise{3.22}
+
+Can the average-case cost be worse than the worst-case cost? Can it be better than the best-case cost?
+
+\textbf{No to both.} The average-case cost is mathematically defined strictly as the expected value (a weighted average) of the running times across all possible inputs of size $n$. 
+
+If $C_i$ is the cost of input $i$, the worst-case cost is definitively $\max(C_i)$ and the best-case cost is $\min(C_i)$. A weighted average of a set of numbers strictly cannot be greater than the maximum number in that set, nor can it ever be less than the minimum number. Therefore, the average-case complexity is permanently and irrevocably bounded between the absolute best and worst-case complexities.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.23
+% =============================================================
+\exercise{3.23}
+
+Prove that if an algorithm is $\Theta(f(n))$ in the average case, then it is $\Omega(f(n))$ in the worst case.
+
+\begin{proof}
+Let $A(n)$ be the average-case running time and $W(n)$ be the worst-case running time. 
+By fundamental definition, the worst-case running time must be greater than or equal to the average-case running time for all $n$:
+\[
+    W(n) \ge A(n)
+\]
+We are given that $A(n) \in \Theta(f(n))$. The formal definition of $\Theta$ implies that $A(n) \in \Omega(f(n))$, meaning there exists a strictly positive constant $c$ and an integer $n_0$ such that for all $n \ge n_0$:
+\[
+    A(n) \ge c\,f(n)
+\]
+Because $W(n) \ge A(n)$, we can combine the sequential inequalities to state that for all $n \ge n_0$:
+\[
+    W(n) \ge c\,f(n)
+\]
+This satisfies the formal definition of $\Omega$. Thus, $\boxed{W(n) \in \Omega(f(n))}$.
+\end{proof}
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.24
+% =============================================================
+\exercise{3.24}
+
+Prove that if an algorithm is $\Theta(f(n))$ in the average case, then it is $O(f(n))$ in the best case.
+
+\begin{proof}
+Let $A(n)$ be the average-case running time and $B(n)$ be the best-case running time. 
+By fundamental definition, the best-case running time must be less than or equal to the average-case running time for all $n$:
+\[
+    B(n) \le A(n)
+\]
+We are given that $A(n) \in \Theta(f(n))$. The formal definition of $\Theta$ guarantees that $A(n) \in O(f(n))$, meaning there exists a strictly positive constant $c$ and an integer $n_0$ such that for all $n \ge n_0$:
+\[
+    A(n) \le c\,f(n)
+\]
+Because $B(n) \le A(n)$, we can chain the inequalities to state that for all $n \ge n_0$:
+\[
+    B(n) \le A(n) \le c\,f(n) \implies B(n) \le c\,f(n)
+\]
+This satisfies the formal definition of Big-Oh. Thus, $\boxed{B(n) \in O(f(n))}$.
+\end{proof}
 
 \end{document}
