@@ -921,8 +921,6 @@ When $n$ is EVEN, the loop runs $n$ times: $\Theta(n)$. When $n$ is ODD, no loop
 % =============================================================
 \exercise{3.13}
 
-Show that big-Theta notation ($\Theta$) defines an equivalence relation on the set of functions.
-
 \begin{proof}
 To show that $\Theta$ defines an equivalence relation, we must demonstrate that it is reflexive, symmetric, and transitive.
 
@@ -972,15 +970,6 @@ Since the relationship is reflexive, symmetric, and transitive, $\Theta$ is an \
 % =============================================================
 \exercise{3.14}
 
-Give the best lower bound that you can for the following code fragment, as a function of the initial value of $n$.
-\begin{lstlisting}
-  while (n > 1)
-    if (ODD(n))
-      n = 3 * n + 1;
-    else
-      n = n / 2;
-\end{lstlisting}
-
 \textbf{Answer:} This code calculates the sequence of the famous Collatz conjecture. We are asked for the best \textit{lower bound} ($\Omega$) for its execution time.
 
 To find the minimum possible number of iterations, we consider the scenario where $n$ decreases to $1$ as fast as mathematically possible. The condition \texttt{n = n / 2} halves the value, whereas the condition \texttt{n = 3 * n + 1} more than triples it. Thus, the fastest path to $1$ occurs when $n$ is always EVEN (i.e., $n$ is initially a power of $2$, $n = 2^k$).
@@ -996,8 +985,6 @@ Since the number of iterations can never be fewer than $\log_2 n$ (it cannot dec
 %  EXERCISE 3.15
 % =============================================================
 \exercise{3.15}
-
-Does every algorithm have a $\Theta$ running-time equation? In other words, are the upper and lower bounds for the running time (on any specified class of inputs) always the same?
 
 \textbf{Yes}, for any \textit{specific} class of inputs (e.g., worst-case only, or best-case only), every algorithm does have a $\Theta$ running-time equation. This is because, for a fixed class, the running time $T(n)$ is a single well-defined function of $n$, and every such function is $\Theta$ of itself.
 
@@ -1024,8 +1011,6 @@ Does every problem for which there exists some algorithm have a $\Theta$ running
 %  EXERCISE 3.17
 % =============================================================
 \exercise{3.17}
-
-Given an array storing integers ordered by value, modify the binary search routine to return the position of the first integer with value $K$ in the situation where $K$ can appear multiple times. Be sure that your algorithm is $\Theta(\log n)$.
 
 \textbf{Answer:} To maintain the strict $\Theta(\log n)$ bound, we cannot drop into a sequential $O(n)$ footprint upon finding $K$. Instead, we must continue the binary search in the left half of the array whenever we encounter $K$ to look for earlier occurrences.
 
@@ -1060,8 +1045,6 @@ Because the \texttt{while} loop strictly continues to halve the search space at 
 % =============================================================
 \exercise{3.18}
 
-Given an array storing integers ordered by value, modify the binary search routine to return the position of the integer with the greatest value less than $K$ when $K$ itself does not appear in the array. Return \texttt{ERROR} if the least value in the array is greater than $K$.
-
 \textbf{Answer:} When a standard binary search finishes without finding the element, the \texttt{low} and \texttt{high} pointers cross. In this failed crossing state, the \texttt{high} point index naturally rests at exactly the position of the greatest element less than $K$.
 
 \begin{lstlisting}
@@ -1092,8 +1075,6 @@ int greatest_less_than(int A[], int n, int K) {
 %  EXERCISE 3.19
 % =============================================================
 \exercise{3.19}
-
-Modify the binary search routine to support search in an array of infinite size. Provide an algorithm that can determine the position $n$ boundary in $O(\log n)$ comparisons.
 
 \textbf{Answer:} To search an infinite array, we first need to explicitly and dynamically discover an upper bound for the index. We can do this efficiently using \textbf{Exponential Search} (also known as scaling search operations).
 
@@ -1171,8 +1152,6 @@ Using the fundamental arithmetic series formula, the closed-form solution is:
 % =============================================================
 \exercise{3.22}
 
-Can the average-case cost be worse than the worst-case cost? Can it be better than the best-case cost?
-
 \textbf{No to both.} The average-case cost is mathematically defined strictly as the expected value (a weighted average) of the running times across all possible inputs of size $n$. 
 
 If $C_i$ is the cost of input $i$, the worst-case cost is definitively $\max(C_i)$ and the best-case cost is $\min(C_i)$. A weighted average of a set of numbers strictly cannot be greater than the maximum number in that set, nor can it ever be less than the minimum number. Therefore, the average-case complexity is permanently and irrevocably bounded between the absolute best and worst-case complexities.
@@ -1183,8 +1162,6 @@ If $C_i$ is the cost of input $i$, the worst-case cost is definitively $\max(C_i
 %  EXERCISE 3.23
 % =============================================================
 \exercise{3.23}
-
-Prove that if an algorithm is $\Theta(f(n))$ in the average case, then it is $\Omega(f(n))$ in the worst case.
 
 \begin{proof}
 Let $A(n)$ be the average-case running time and $W(n)$ be the worst-case running time. 
@@ -1209,8 +1186,6 @@ This satisfies the formal definition of $\Omega$. Thus, $\boxed{W(n) \in \Omega(
 %  EXERCISE 3.24
 % =============================================================
 \exercise{3.24}
-
-Prove that if an algorithm is $\Theta(f(n))$ in the average case, then it is $O(f(n))$ in the best case.
 
 \begin{proof}
 Let $A(n)$ be the average-case running time and $B(n)$ be the best-case running time. 
