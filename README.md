@@ -1,18 +1,5 @@
-# 📐 Solutions Manual
+# Solutions Manual
 ### *Data Structures & Algorithm Analysis in C++* — Clifford A. Shaffer
-
-<div align="center">
-
-![Status](https://img.shields.io/badge/status-in%20progress-blue?style=flat-square)
-![Language](https://img.shields.io/badge/language-C%2B%2B17-navy?style=flat-square&logo=cplusplus)
-![LaTeX](https://img.shields.io/badge/exercises-LaTeX%20PDF-teal?style=flat-square&logo=latex)
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-
-*A complete, organized, and lovingly typeset solutions manual — exercises in LaTeX, projects in C++.*
-
-</div>
-
----
 
 ## ✦ What This Is
 
@@ -25,46 +12,6 @@ Each chapter is treated as its own self-contained module:
 
 The goal is not just to have answers — it's to have *good* answers. Ones that actually explain the reasoning.
 
----
-
-## 🗂 Repository Structure
-
-```
-dsa-shaffer-solutions/
-│
-├── README.md
-│
-├── chapter-01/
-│   ├── exercises/
-│   │   ├── ch01_exercises.tex        # LaTeX source
-│   │   └── ch01_exercises.pdf        # Compiled PDF
-│   └── projects/
-│       ├── CMakeLists.txt
-│       ├── project_1_1/
-│       │   ├── main.cpp
-│       │   └── README.md
-│       └── project_1_2/
-│           ├── main.cpp
-│           └── README.md
-│
-├── chapter-02/
-│   ├── exercises/
-│   └── projects/
-│
-├── chapter-03/
-│   ├── exercises/
-│   └── projects/
-│
-│   ... (one directory per chapter)
-│
-├── latex/
-│   └── preamble.tex                  # Shared LaTeX style and macros
-│
-└── cmake/
-    └── CompilerFlags.cmake           # Shared build configuration
-```
-
----
 
 ## 📖 Progress
 
@@ -72,8 +19,8 @@ dsa-shaffer-solutions/
 |:-------:|-------|:---------:|:--------:|
 | 1 | Data Structures and Algorithms | ✅ Complete | ✅ Complete |
 | 2 | Mathematical Preliminaries | ✅ Complete | ✅ Complete |
-| 3 | Algorithm Analysis | 🔄 In Progress | ⬜ Not Started |
-| 4 | Lists, Stacks, and Queues | ⬜ Not Started | ⬜ Not Started |
+| 3 | Algorithm Analysis | ✅ Complete | ✅ Complete |
+| 4 | Lists, Stacks, and Queues | 🔄 In Progress | ⬜ Not Started |
 | 5 | Binary Trees | ⬜ Not Started | ⬜ Not Started |
 | 6 | Non-Binary Trees | ⬜ Not Started | ⬜ Not Started |
 | 7 | Internal Sorting | ⬜ Not Started | ⬜ Not Started |
