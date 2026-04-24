@@ -10,7 +10,6 @@ Each chapter is treated as its own self-contained module:
 - **Exercises** → typeset as clean, structured **LaTeX PDFs**, with proofs written carefully and code fragments formatted properly
 - **Projects** → implemented as **compilable, well-documented C++ executables**, organized with CMake and tested
 
-The goal is not just to have answers — it's to have *good* answers. Ones that actually explain the reasoning.
 
 
 ## 📖 Progress
