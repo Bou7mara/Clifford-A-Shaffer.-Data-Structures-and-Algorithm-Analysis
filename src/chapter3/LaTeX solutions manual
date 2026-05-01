@@ -98,54 +98,178 @@
 \newgeometry{margin=0pt}
 \thispagestyle{empty}
 \pagenumbering{gobble}
-\pagecolor{coverblue}
 
-\vspace*{0.12\textheight}
+% --- Cover color definitions ---
+\definecolor{coverdark}{HTML}{0d1117}
+\definecolor{covermid}{HTML}{161b22}
+\definecolor{coverlight}{HTML}{21262d}
+\definecolor{accentcyan}{HTML}{d4a94c}   % now gold (matches accentgold)
+\definecolor{accentamber}{HTML}{f0883e}
+\definecolor{accentpink}{HTML}{f778ba}
+\definecolor{nodegreen}{HTML}{3fb950}
+\definecolor{subtlewhite}{HTML}{c9d1d9}
+\definecolor{dimwhite}{HTML}{8b949e}
 
-\begin{center}
+\pagecolor{coverdark}
 
-    % — sub-title —
-    {\fontsize{14}{18}\selectfont\color{accentgold}%
-     \textls[120]{THE COMPLETE SOLUTIONS MANUAL}}
+\begin{tikzpicture}[remember picture, overlay]
 
-    \vspace{0.6cm}
-    {\color{accentgold}\rule{6.7cm}{0.6pt}}
+  % ===== BACKGROUND LAYERS =====
+  % Subtle radial glow behind the center
+  \fill[covermid, opacity=0.6]
+    (current page.center) circle [x radius=14cm, y radius=18cm];
+  \fill[coverlight, opacity=0.3]
+    (current page.center) circle [x radius=9cm, y radius=12cm];
 
-    \vspace{1.8cm}
+  % ===== HEXAGONAL GRID (top-right) =====
+  \begin{scope}[shift={(current page.north east)}, xshift=-3.5cm, yshift=-4cm,
+                 rotate=-15, opacity=0.08]
+    \foreach \row in {0,...,5} {
+      \foreach \col in {0,...,4} {
+        \pgfmathsetmacro{\xoff}{\col * 1.5}
+        \pgfmathsetmacro{\yoff}{\row * 1.732 + mod(\col,2) * 0.866}
+        \draw[accentgold, line width=0.4pt]
+          (\xoff, \yoff) ++(0:0.5)
+          \foreach \a in {60,120,...,360} { -- ++(\a:0.5) } -- cycle;
+      }
+    }
+  \end{scope}
 
-    % — title —
-    {\fontsize{32}{38}\selectfont\bfseries\color{white}%
-     Data Structures \&\\[6pt] Algorithm Analysis in C++}
+  % ===== FLOATING GRAPH NODES & EDGES (left side) =====
+  \begin{scope}[shift={(current page.west)}, xshift=2.5cm, yshift=1cm]
+    % Edges
+    \draw[accentgold, opacity=0.15, line width=0.6pt] (0,0) -- (1.5, 2.2);
+    \draw[accentgold, opacity=0.15, line width=0.6pt] (0,0) -- (2.0, -1.0);
+    \draw[accentgold, opacity=0.15, line width=0.6pt] (1.5, 2.2) -- (3.5, 1.5);
+    \draw[accentgold, opacity=0.15, line width=0.6pt] (2.0, -1.0) -- (3.5, 1.5);
+    \draw[accentgold, opacity=0.15, line width=0.6pt] (3.5, 1.5) -- (5.0, 3.0);
+    \draw[accentgold, opacity=0.12, line width=0.6pt] (1.5, 2.2) -- (0.5, 4.0);
+    \draw[accentgold, opacity=0.12, line width=0.6pt] (0.5, 4.0) -- (2.5, 5.0);
+    \draw[accentgold, opacity=0.10, line width=0.6pt] (2.0, -1.0) -- (0.2, -3.0);
+    \draw[accentgold, opacity=0.10, line width=0.6pt] (0.2, -3.0) -- (2.8, -4.2);
+    \draw[accentgold, opacity=0.10, line width=0.6pt] (2.0, -1.0) -- (2.8, -4.2);
+    % Nodes
+    \foreach \x/\y/\c in {0/0/accentgold, 1.5/2.2/accentgold, 2.0/-1.0/accentgold,
+                           3.5/1.5/accentgold, 5.0/3.0/accentgold, 0.5/4.0/accentgold,
+                           2.5/5.0/accentgold, 0.2/-3.0/accentgold, 2.8/-4.2/accentgold} {
+      \fill[\c, opacity=0.25] (\x, \y) circle (3pt);
+      \fill[\c, opacity=0.5]  (\x, \y) circle (1.5pt);
+    }
+  \end{scope}
 
-    \vspace{1.2cm}
+  % ===== BINARY TREE (bottom-right) =====
+  \begin{scope}[shift={(current page.south east)}, xshift=-4cm, yshift=4.5cm,
+                 opacity=0.10, line width=0.5pt]
+    % Level 0
+    \coordinate (root) at (0, 0);
+    % Level 1
+    \coordinate (l1)   at (-2, -1.5);
+    \coordinate (r1)   at ( 2, -1.5);
+    % Level 2
+    \coordinate (ll2)  at (-3, -3);
+    \coordinate (lr2)  at (-1, -3);
+    \coordinate (rl2)  at ( 1, -3);
+    \coordinate (rr2)  at ( 3, -3);
+    % Edges
+    \draw[accentamber] (root) -- (l1);
+    \draw[accentamber] (root) -- (r1);
+    \draw[accentamber] (l1) -- (ll2);
+    \draw[accentamber] (l1) -- (lr2);
+    \draw[accentamber] (r1) -- (rl2);
+    \draw[accentamber] (r1) -- (rr2);
+    % Nodes
+    \foreach \nd in {root, l1, r1, ll2, lr2, rl2, rr2} {
+      \fill[accentamber] (\nd) circle (4pt);
+    }
+  \end{scope}
 
-    % — author of textbook —
-    {\fontsize{24}{28}\selectfont\color{white!80}%
-     by Clifford A.\@ Shaffer}
+  % ===== CIRCUIT / FLOW LINES (top-left) =====
+  \begin{scope}[shift={(current page.north west)}, xshift=1.5cm, yshift=-2cm,
+                 opacity=0.06, line width=0.7pt]
+    \draw[accentgold] (0,0) -- ++(2,0) -- ++(0,-1.5) -- ++(3,0);
+    \draw[accentgold] (0,-0.8) -- ++(1,0) -- ++(0,-2) -- ++(2,0) -- ++(0,0.5) -- ++(1.5,0);
+    \draw[accentgold] (0,-2.2) -- ++(3,0) -- ++(0,-1) -- ++(1.5,0);
+    \draw[accentgold] (2,0) -- ++(0, 0.8) -- ++(2.5,0);
+    % Small junction dots
+    \foreach \x/\y in {2/0, 2/-1.5, 5/-1.5, 1/-0.8, 1/-2.8, 3/-2.8, 3/-2.3,
+                        3/-2.2, 3/-3.2, 4.5/-3.2, 2/0.8, 4.5/0.8} {
+      \fill[accentgold] (\x, \y) circle (1.5pt);
+    }
+  \end{scope}
 
-    \vspace{3.5cm}
+  % ===== SCATTERED FLOATING DOTS =====
+  \foreach \x/\y/\s/\c in {
+    -7/8/1.2/accentgold, 6/-6/0.8/accentgold, -5/-9/1.0/accentgold,
+    8/5/0.6/accentgold, -8/-3/0.9/accentgold, 7/10/0.7/accentgold,
+    -3/11/0.5/accentgold, 4/-10/0.8/accentgold, -9/6/0.6/accentgold} {
+    \fill[\c, opacity=0.08] ([xshift=\x cm, yshift=\y cm]current page.center) circle (\s pt);
+  }
 
-    % — chapter —
-    {\fontsize{24}{30}\selectfont\bfseries\color{accentgold}%
-     Chapter 3:}
+  % ===== MAIN TEXT CONTENT =====
 
-    \vspace{0.4cm}
+  % — top accent line —
+  \draw[accentgold, line width=0.8pt, opacity=0.4]
+    ([yshift=-4.5cm, xshift=-4cm]current page.north)
+    -- ++(8cm, 0);
 
-    {\fontsize{24}{26}\selectfont\color{white}%
-     Algorithm Analysis}
+  % — subtitle —
+  \node[anchor=center, text=accentgold, font=\fontsize{11}{14}\selectfont]
+    at ([yshift=-5.2cm]current page.north)
+    {\textls[200]{THE COMPLETE SOLUTIONS MANUAL}};
 
-    \vfill
+  % — second accent line —
+  \draw[accentgold, line width=0.4pt, opacity=0.25]
+    ([yshift=-5.8cm, xshift=-3cm]current page.north)
+    -- ++(6cm, 0);
 
-    {\color{accentgold}\rule{4cm}{0.4pt}}
+  % — main title (two lines) —
+  \node[anchor=center, text=white,
+        font=\fontsize{36}{44}\selectfont\bfseries,
+        align=center]
+    at ([yshift=-8.8cm]current page.north)
+    {Data Structures \&\\[6pt] Algorithm Analysis in C++};
 
-    \vspace{0.6cm}
+  % — textbook author —
+  \node[anchor=center, text=dimwhite,
+        font=\fontsize{14}{18}\selectfont\itshape]
+    at ([yshift=-11.5cm]current page.north)
+    {by Clifford A.\ Shaffer};
 
-    {\fontsize{18}{22}\selectfont\color{white!70}%
-     Ahmed Amine Azzouzi}
+  % — decorative diamond —
+  \node[anchor=center, text=accentgold, opacity=0.5,
+        font=\fontsize{10}{10}\selectfont]
+    at ([yshift=-12.8cm]current page.north)
+    {$\diamond$};
 
-    \vspace{1.5cm}
+  % — chapter block (no frame) —
+  \node[anchor=center, text=accentgold,
+        font=\fontsize{22}{26}\selectfont\bfseries]
+    at ([yshift=-14.8cm]current page.north)
+    {Chapter 3};
+  \node[anchor=center, text=subtlewhite,
+        font=\fontsize{18}{22}\selectfont]
+    at ([yshift=-15.9cm]current page.north)
+    {Algorithm Analysis};
 
-\end{center}
+  % — bottom section —
+  % Author name
+  \node[anchor=center, text=subtlewhite,
+        font=\fontsize{16}{20}\selectfont]
+    at ([yshift=4.5cm]current page.south)
+    {Ahmed Amine Azzouzi};
+
+  % Bottom accent line
+  \draw[accentgold, line width=0.6pt, opacity=0.3]
+    ([yshift=3.5cm, xshift=-2.5cm]current page.south)
+    -- ++(5cm, 0);
+
+  % Small year tag
+  \node[anchor=center, text=dimwhite, opacity=0.5,
+        font=\fontsize{9}{12}\selectfont]
+    at ([yshift=2.8cm]current page.south)
+    {\textls[150]{2026}};
+
+\end{tikzpicture}
 
 
 
@@ -347,11 +471,6 @@ Ordering by asymptotic growth rate (slowest to fastest):
 % =============================================================
 \exercise{3.4}
 
-A new machine is $64\times$ faster.  For each complexity, find the new
-problem size~$n'$ solvable in the same time.
-
-\bigskip
-
 \textbf{(a)}\; $T(n)=3\cdot 2^{n}$
 \[
     \frac{3 \cdot 2^{n'}}{64} = 3 \cdot 2^{n}
@@ -454,7 +573,7 @@ We try the ansatz $T(n) = 2^{n^{k}}$ and solve for~$k$.
 
 \bigskip
 
-\textbf{(a)}\; Find $T$ such that $T(2n) = \bigl[T(n)\bigr]^{2}$.
+\textbf{(a)}
 
 Let $T(n) = 2^{n^{k}}$.  Then
 \[
@@ -480,7 +599,7 @@ $T(2n) = 2^{2n} = \bigl(2^{n}\bigr)^{2} = \bigl[T(n)\bigr]^{2}.\;\checkmark$
 
 \bigskip
 
-\textbf{(b)}\; Find $T$ such that $T(2n) = \bigl[T(n)\bigr]^{3}$.
+\textbf{(b)}
 
 Again let $T(n) = 2^{n^{k}}$.  Then
 \[
@@ -524,7 +643,7 @@ and $n_0$ such that
 
 \bigskip
 
-\textbf{(a)}\; Show that $1 \in O(1)$.
+\textbf{(a)}
 
 \textit{Proof.}\;
 Let $f(n) = 1$ and $g(n) = 1$.  Choose $c = 1$ and $n_0 = 1$.
@@ -539,7 +658,7 @@ The condition of the definition is satisfied, so
 
 \bigskip
 
-\textbf{(b)}\; Show that $1 \in O(n)$.
+\textbf{(b)}
 
 \textit{Proof.}\;
 Let $f(n) = 1$ and $g(n) = n$.  Choose $c = 1$ and $n_0 = 1$.
@@ -623,7 +742,7 @@ We assume that all constants $c_i$ are positive.
 % =============================================================
 \exercise{3.9}
 
-\textbf{(a)}\; What is the smallest integer $k$ such that $\sqrt{n} = O(n^k)$?
+\textbf{(a)}
 
 By definition, $\sqrt{n} = n^{0.5}$. We want the smallest integer $k$ such that $n^{0.5} \le c\,n^k$ for $n \ge n_0$.
 Since $k$ must be an integer:
@@ -638,7 +757,7 @@ Therefore, the smallest integer is
 
 \bigskip
 
-\textbf{(b)}\; What is the smallest integer $k$ such that $n \log n = O(n^k)$?
+\textbf{(b)}
 
 We need the smallest integer $k$ such that $n \log n \le c\,n^k$ for $n \ge n_0$.
 \begin{itemize}
@@ -655,7 +774,7 @@ Therefore, the smallest integer is
 % =============================================================
 \exercise{3.10}
 
-\textbf{(a)}\; Is $2n = \Theta(3n)$? Explain why or why not.
+\textbf{(a)}
 
 \textbf{Yes.} For $2n \in \Theta(3n)$, we must find positive constants $c_1, c_2,$ and $n_0$ such that:
 \[
@@ -670,7 +789,7 @@ We can choose $c_1 = \frac{1}{2}$, $c_2 = 1$, and $n_0 = 1$. The inequalities $\
 
 \bigskip
 
-\textbf{(b)}\; Is $2^n = \Theta(3^n)$? Explain why or why not.
+\textbf{(b)}
 
 \textbf{No.} For $2^n \in \Theta(3^n)$ to be true, there must exist positive constants $c_1, c_2,$ and $n_0$ such that:
 \[
