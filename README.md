@@ -12,7 +12,7 @@ Each chapter is treated as its own self-contained module:
 
 
 
-## 📖 Progress
+## Progress
 
 | Chapter | Title | Exercises | Projects |
 |:-------:|-------|:---------:|:--------:|
