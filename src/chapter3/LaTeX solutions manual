@@ -115,95 +115,105 @@
 \begin{tikzpicture}[remember picture, overlay]
 
   % ===== BACKGROUND LAYERS =====
-  % Subtle radial glow behind the center
-  \fill[covermid, opacity=0.6]
-    (current page.center) circle [x radius=14cm, y radius=18cm];
-  \fill[coverlight, opacity=0.3]
-    (current page.center) circle [x radius=9cm, y radius=12cm];
+  % Subtle top-to-bottom gradient
+  \shade[top color=coverlight, bottom color=coverdark, opacity=0.6]
+    (current page.south west) rectangle (current page.north east);
 
-  % ===== HEXAGONAL GRID (top-right) =====
-  \begin{scope}[shift={(current page.north east)}, xshift=-3.5cm, yshift=-4cm,
-                 rotate=-15, opacity=0.08]
-    \foreach \row in {0,...,5} {
-      \foreach \col in {0,...,4} {
-        \pgfmathsetmacro{\xoff}{\col * 1.5}
-        \pgfmathsetmacro{\yoff}{\row * 1.732 + mod(\col,2) * 0.866}
-        \draw[accentgold, line width=0.4pt]
-          (\xoff, \yoff) ++(0:0.5)
-          \foreach \a in {60,120,...,360} { -- ++(\a:0.5) } -- cycle;
-      }
+  % ===== NETWORK ILLUSTRATION =====
+  % Single cohesive composition centered in the gap between chapter info and author name.
+  % Built as one interconnected structure: tree core + graph extensions + trailing wisps.
+
+  % --- Main composition, centered horizontally, sitting between chapter text and author ---
+  \begin{scope}[shift={(current page.center)}, yshift=-5.5cm]
+
+    % == Trailing wisps (outermost, faintest — organic feel) ==
+    \draw[accentgold, opacity=0.06, line width=0.3pt]
+      (-7.5, 1.5) -- (-6.2, 0.8) -- (-5.0, 1.2);
+    \draw[accentgold, opacity=0.05, line width=0.3pt]
+      (-7.0, -0.5) -- (-5.8, -0.2);
+    \draw[accentgold, opacity=0.06, line width=0.3pt]
+      (5.5, 1.8) -- (6.5, 1.2) -- (7.8, 1.5);
+    \draw[accentgold, opacity=0.05, line width=0.3pt]
+      (6.0, -0.3) -- (7.2, 0.2);
+    \draw[accentgold, opacity=0.04, line width=0.3pt]
+      (-6.0, -1.8) -- (-5.2, -2.5) -- (-4.0, -2.2);
+    \draw[accentgold, opacity=0.04, line width=0.3pt]
+      (5.0, -2.0) -- (6.2, -2.6) -- (7.0, -2.0);
+    % Wisp dots
+    \foreach \x/\y/\o in {-7.5/1.5/0.06, -6.2/0.8/0.08, -7.0/-0.5/0.05,
+                           -5.8/-0.2/0.07, 7.8/1.5/0.06, 6.5/1.2/0.08,
+                           7.2/0.2/0.05, -6.0/-1.8/0.04, -5.2/-2.5/0.05,
+                           7.0/-2.0/0.04, 6.2/-2.6/0.05} {
+      \fill[accentgold, opacity=\o] (\x, \y) circle (1.5pt);
     }
-  \end{scope}
 
-  % ===== FLOATING GRAPH NODES & EDGES (left side) =====
-  \begin{scope}[shift={(current page.west)}, xshift=2.5cm, yshift=1cm]
-    % Edges
-    \draw[accentgold, opacity=0.15, line width=0.6pt] (0,0) -- (1.5, 2.2);
-    \draw[accentgold, opacity=0.15, line width=0.6pt] (0,0) -- (2.0, -1.0);
-    \draw[accentgold, opacity=0.15, line width=0.6pt] (1.5, 2.2) -- (3.5, 1.5);
-    \draw[accentgold, opacity=0.15, line width=0.6pt] (2.0, -1.0) -- (3.5, 1.5);
-    \draw[accentgold, opacity=0.15, line width=0.6pt] (3.5, 1.5) -- (5.0, 3.0);
-    \draw[accentgold, opacity=0.12, line width=0.6pt] (1.5, 2.2) -- (0.5, 4.0);
-    \draw[accentgold, opacity=0.12, line width=0.6pt] (0.5, 4.0) -- (2.5, 5.0);
-    \draw[accentgold, opacity=0.10, line width=0.6pt] (2.0, -1.0) -- (0.2, -3.0);
-    \draw[accentgold, opacity=0.10, line width=0.6pt] (0.2, -3.0) -- (2.8, -4.2);
-    \draw[accentgold, opacity=0.10, line width=0.6pt] (2.0, -1.0) -- (2.8, -4.2);
-    % Nodes
-    \foreach \x/\y/\c in {0/0/accentgold, 1.5/2.2/accentgold, 2.0/-1.0/accentgold,
-                           3.5/1.5/accentgold, 5.0/3.0/accentgold, 0.5/4.0/accentgold,
-                           2.5/5.0/accentgold, 0.2/-3.0/accentgold, 2.8/-4.2/accentgold} {
-      \fill[\c, opacity=0.25] (\x, \y) circle (3pt);
-      \fill[\c, opacity=0.5]  (\x, \y) circle (1.5pt);
+    % == Graph extension (left side — connects into tree) ==
+    \coordinate (gL1) at (-5.0, 1.2);
+    \coordinate (gL2) at (-4.2, -0.3);
+    \coordinate (gL3) at (-5.8, -0.2);
+    \coordinate (gL4) at (-4.0, -2.2);
+    % Extension edges
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gL1) -- (gL2);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gL3) -- (gL2);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gL2) -- (gL4);
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gL1) -- (gL3);
+    % Extension nodes
+    \foreach \nd/\o in {gL1/0.14, gL2/0.16, gL3/0.12, gL4/0.10} {
+      \fill[accentgold, opacity=\o] (\nd) circle (3pt);
     }
-  \end{scope}
 
-  % ===== BINARY TREE (bottom-right) =====
-  \begin{scope}[shift={(current page.south east)}, xshift=-4cm, yshift=4.5cm,
-                 opacity=0.10, line width=0.5pt]
-    % Level 0
-    \coordinate (root) at (0, 0);
-    % Level 1
-    \coordinate (l1)   at (-2, -1.5);
-    \coordinate (r1)   at ( 2, -1.5);
-    % Level 2
-    \coordinate (ll2)  at (-3, -3);
-    \coordinate (lr2)  at (-1, -3);
-    \coordinate (rl2)  at ( 1, -3);
-    \coordinate (rr2)  at ( 3, -3);
-    % Edges
-    \draw[accentamber] (root) -- (l1);
-    \draw[accentamber] (root) -- (r1);
-    \draw[accentamber] (l1) -- (ll2);
-    \draw[accentamber] (l1) -- (lr2);
-    \draw[accentamber] (r1) -- (rl2);
-    \draw[accentamber] (r1) -- (rr2);
-    % Nodes
-    \foreach \nd in {root, l1, r1, ll2, lr2, rl2, rr2} {
-      \fill[accentamber] (\nd) circle (4pt);
+    % == BST core (center — the hero element) ==
+    % Proper BST: root=8, L=3, R=10, LL=1, LR=6, RR=14, LRL=4, LRR=7, RRL=13
+    \coordinate (n8)  at ( 0.0,  0.8);
+    \coordinate (n3)  at (-1.3, -0.2);
+    \coordinate (n10) at ( 1.3, -0.2);
+    \coordinate (n1)  at (-2.1, -1.2);
+    \coordinate (n6)  at (-0.5, -1.2);
+    \coordinate (n14) at ( 2.1, -1.2);
+    \coordinate (n4)  at (-0.9, -2.1);
+    \coordinate (n7)  at (-0.1, -2.1);
+    \coordinate (n13) at ( 1.7, -2.1);
+    % Tree edges
+    \foreach \a/\b in {n8/n3, n8/n10, n3/n1, n3/n6, n10/n14,
+                        n6/n4, n6/n7, n14/n13} {
+      \draw[accentgold, opacity=0.22, line width=0.7pt] (\a) -- (\b);
     }
-  \end{scope}
-
-  % ===== CIRCUIT / FLOW LINES (top-left) =====
-  \begin{scope}[shift={(current page.north west)}, xshift=1.5cm, yshift=-2cm,
-                 opacity=0.06, line width=0.7pt]
-    \draw[accentgold] (0,0) -- ++(2,0) -- ++(0,-1.5) -- ++(3,0);
-    \draw[accentgold] (0,-0.8) -- ++(1,0) -- ++(0,-2) -- ++(2,0) -- ++(0,0.5) -- ++(1.5,0);
-    \draw[accentgold] (0,-2.2) -- ++(3,0) -- ++(0,-1) -- ++(1.5,0);
-    \draw[accentgold] (2,0) -- ++(0, 0.8) -- ++(2.5,0);
-    % Small junction dots
-    \foreach \x/\y in {2/0, 2/-1.5, 5/-1.5, 1/-0.8, 1/-2.8, 3/-2.8, 3/-2.3,
-                        3/-2.2, 3/-3.2, 4.5/-3.2, 2/0.8, 4.5/0.8} {
-      \fill[accentgold] (\x, \y) circle (1.5pt);
+    % Bridge edges (connecting graph extensions into tree)
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gL2) -- (n1);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gL4) -- (n4);
+    % Tree nodes with labels
+    \foreach \nd/\lbl in {n8/8, n3/3, n10/10, n1/1, n6/6,
+                           n14/14, n4/4, n7/7, n13/13} {
+      \fill[coverdark, opacity=0.8] (\nd) circle (8pt);
+      \draw[accentgold, opacity=0.30, line width=0.6pt] (\nd) circle (8pt);
+      \node[text=accentgold, opacity=0.35, font=\fontsize{6}{6}\selectfont\bfseries]
+        at (\nd) {\lbl};
     }
-  \end{scope}
 
-  % ===== SCATTERED FLOATING DOTS =====
-  \foreach \x/\y/\s/\c in {
-    -7/8/1.2/accentgold, 6/-6/0.8/accentgold, -5/-9/1.0/accentgold,
-    8/5/0.6/accentgold, -8/-3/0.9/accentgold, 7/10/0.7/accentgold,
-    -3/11/0.5/accentgold, 4/-10/0.8/accentgold, -9/6/0.6/accentgold} {
-    \fill[\c, opacity=0.08] ([xshift=\x cm, yshift=\y cm]current page.center) circle (\s pt);
-  }
+    % == Graph extension (right side — connects into tree) ==
+    \coordinate (gR1) at (5.5, 1.8);
+    \coordinate (gR2) at (4.0, 0.0);
+    \coordinate (gR3) at (4.5, -1.8);
+    \coordinate (gR4) at (5.8, -0.3);
+    % Extension edges
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gR1) -- (gR2);
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gR1) -- (gR4);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gR2) -- (gR3);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gR4) -- (gR2);
+    \draw[accentgold, opacity=0.08, line width=0.5pt] (gR4) -- (gR3);
+    % Bridge edges
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gR2) -- (n14);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gR3) -- (n13);
+    % Extension nodes
+    \foreach \nd/\o in {gR1/0.14, gR2/0.16, gR3/0.10, gR4/0.12} {
+      \fill[accentgold, opacity=\o] (\nd) circle (3pt);
+    }
+
+    % == Subtle glow behind the BST root ==
+    \fill[accentgold, opacity=0.03] (n8) circle (2.5cm);
+    \fill[accentgold, opacity=0.02] (n8) circle (4.5cm);
+
+  \end{scope}
 
   % ===== MAIN TEXT CONTENT =====
 
