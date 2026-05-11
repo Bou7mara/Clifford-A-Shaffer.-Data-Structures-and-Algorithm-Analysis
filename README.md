@@ -1,5 +1,5 @@
 # Solutions Manual
-### *Data Structures & Algorithm Analysis in C++* — Clifford A. Shaffer
+### *Data Structures & Algorithm Analysis in C++* — Clifford A. Shaffer.
 
 ## ✦ What This Is
 
