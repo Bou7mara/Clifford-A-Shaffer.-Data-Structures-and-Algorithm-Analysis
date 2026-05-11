@@ -1,7 +1,7 @@
 # Solutions Manual
 ### *Data Structures & Algorithm Analysis in C++* — Clifford A. Shaffer.
 
-## ✦ What This Is
+## ✦ This Is
 
 This repository contains full solutions to every **exercise** and **project** in Clifford A. Shaffer's *Data Structures and Algorithm Analysis in C++*.
 
