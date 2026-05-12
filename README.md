@@ -19,7 +19,7 @@ Each chapter is treated as its own self-contained module:
 | 1 | Data Structures and Algorithms | ✅ Complete | ✅ Complete |
 | 2 | Mathematical Preliminaries | ✅ Complete | ✅ Complete |
 | 3 | Algorithm Analysis | ✅ Complete | ✅ Complete |
-| 4 | Lists, Stacks, and Queues | 🔄 In Progress | ⬜ Not Started |
+| 4 | Lists, Stacks, and Queues | ✅ Complete | ⬜ Not Started |
 | 5 | Binary Trees | ⬜ Not Started | ⬜ Not Started |
 | 6 | Non-Binary Trees | ⬜ Not Started | ⬜ Not Started |
 | 7 | Internal Sorting | ⬜ Not Started | ⬜ Not Started |
