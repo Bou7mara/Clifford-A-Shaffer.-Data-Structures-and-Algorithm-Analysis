@@ -3,17 +3,23 @@
 % ======================== PACKAGES ========================
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}                    % improved Computer Modern font
+\usepackage{lmodern}                   
 \usepackage{geometry}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usepackage{amsmath, amssymb}
+\usepackage{amsmath, amssymb, amsthm}
 \usepackage{enumitem}                   % fine-grained list control
 \usepackage{fancyhdr}                   % headers / footers
 \usepackage{titlesec}                   % section styling
 \usepackage[hidelinks]{hyperref}        % clickable TOC, no ugly boxes
 \usepackage{microtype}                  % better typographic fitting
+\usepackage{listings}                   % syntax-highlighted code
+\usepackage{tocloft}
+
+% Increase spacing in Table of Contents
+\setlength{\cftbeforesecskip}{6pt}      % space between sections
+\setlength{\cftbeforesubsecskip}{4pt}   % space between subsections
 
 % ======================== PGFPLOTS ========================
 \pgfplotsset{compat=1.18}
@@ -32,6 +38,26 @@
 
 % ======================== GEOMETRY ========================
 \geometry{margin=2.5cm}
+
+% ======================== LISTINGS ========================
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries\color{sectionblue},
+    commentstyle=\itshape\color{plotB},
+    numbers=none,
+    frame=single,
+    framerule=0.4pt,
+    rulecolor=\color{black!30},
+    backgroundcolor=\color{black!3},
+    breaklines=true,
+    language=C++,
+    showstringspaces=false,
+    tabsize=4,
+    xleftmargin=1em,
+    xrightmargin=1em,
+    aboveskip=1em,
+    belowskip=1em
+}
 
 % ======================== HEADERS =========================
 \pagestyle{fancy}
@@ -55,6 +81,7 @@
 
 % ======================== COMMANDS ========================
 \newcommand{\exercise}[1]{%
+  \phantomsection
   \subsection*{Exercise #1}%
   \addcontentsline{toc}{subsection}{Exercise #1}%
 }
@@ -71,63 +98,204 @@
 \newgeometry{margin=0pt}
 \thispagestyle{empty}
 \pagenumbering{gobble}
-\pagecolor{coverblue}
 
-\vspace*{0.12\textheight}
+% --- Cover color definitions ---
+\definecolor{coverdark}{HTML}{0d1117}
+\definecolor{covermid}{HTML}{161b22}
+\definecolor{coverlight}{HTML}{21262d}
+\definecolor{accentcyan}{HTML}{d4a94c}   % now gold (matches accentgold)
+\definecolor{accentamber}{HTML}{f0883e}
+\definecolor{accentpink}{HTML}{f778ba}
+\definecolor{nodegreen}{HTML}{3fb950}
+\definecolor{subtlewhite}{HTML}{c9d1d9}
+\definecolor{dimwhite}{HTML}{8b949e}
 
-\begin{center}
+\pagecolor{coverdark}
 
-    % — sub-title —
-    {\fontsize{14}{18}\selectfont\color{accentgold}%
-     \textls[120]{THE COMPLETE SOLUTIONS MANUAL}}
+\begin{tikzpicture}[remember picture, overlay]
 
-    \vspace{0.6cm}
-    {\color{accentgold}\rule{6.7cm}{0.6pt}}
+  % ===== BACKGROUND LAYERS =====
+  % Subtle top-to-bottom gradient
+  \shade[top color=coverlight, bottom color=coverdark, opacity=0.6]
+    (current page.south west) rectangle (current page.north east);
 
-    \vspace{1.8cm}
+  % ===== NETWORK ILLUSTRATION =====
+  % Single cohesive composition centered in the gap between chapter info and author name.
+  % Built as one interconnected structure: tree core + graph extensions + trailing wisps.
 
-    % — title —
-    {\fontsize{32}{38}\selectfont\bfseries\color{white}%
-     Data Structures \&\\[6pt] Algorithm Analysis in C++}
+  % --- Main composition, centered horizontally, sitting between chapter text and author ---
+  \begin{scope}[shift={(current page.center)}, yshift=-5.5cm]
 
-    \vspace{1.2cm}
+    % == Trailing wisps (outermost, faintest — organic feel) ==
+    \draw[accentgold, opacity=0.06, line width=0.3pt]
+      (-7.5, 1.5) -- (-6.2, 0.8) -- (-5.0, 1.2);
+    \draw[accentgold, opacity=0.05, line width=0.3pt]
+      (-7.0, -0.5) -- (-5.8, -0.2);
+    \draw[accentgold, opacity=0.06, line width=0.3pt]
+      (5.5, 1.8) -- (6.5, 1.2) -- (7.8, 1.5);
+    \draw[accentgold, opacity=0.05, line width=0.3pt]
+      (6.0, -0.3) -- (7.2, 0.2);
+    \draw[accentgold, opacity=0.04, line width=0.3pt]
+      (-6.0, -1.8) -- (-5.2, -2.5) -- (-4.0, -2.2);
+    \draw[accentgold, opacity=0.04, line width=0.3pt]
+      (5.0, -2.0) -- (6.2, -2.6) -- (7.0, -2.0);
+    % Wisp dots
+    \foreach \x/\y/\o in {-7.5/1.5/0.06, -6.2/0.8/0.08, -7.0/-0.5/0.05,
+                           -5.8/-0.2/0.07, 7.8/1.5/0.06, 6.5/1.2/0.08,
+                           7.2/0.2/0.05, -6.0/-1.8/0.04, -5.2/-2.5/0.05,
+                           7.0/-2.0/0.04, 6.2/-2.6/0.05} {
+      \fill[accentgold, opacity=\o] (\x, \y) circle (1.5pt);
+    }
 
-    % — author of textbook —
-    {\fontsize{24}{28}\selectfont\color{white!80}%
-     by Clifford A.\@ Shaffer}
+    % == Graph extension (left side — connects into tree) ==
+    \coordinate (gL1) at (-5.0, 1.2);
+    \coordinate (gL2) at (-4.2, -0.3);
+    \coordinate (gL3) at (-5.8, -0.2);
+    \coordinate (gL4) at (-4.0, -2.2);
+    % Extension edges
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gL1) -- (gL2);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gL3) -- (gL2);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gL2) -- (gL4);
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gL1) -- (gL3);
+    % Extension nodes
+    \foreach \nd/\o in {gL1/0.14, gL2/0.16, gL3/0.12, gL4/0.10} {
+      \fill[accentgold, opacity=\o] (\nd) circle (3pt);
+    }
 
-    \vspace{3.5cm}
+    % == BST core (center — the hero element) ==
+    % Proper BST: root=8, L=3, R=10, LL=1, LR=6, RR=14, LRL=4, LRR=7, RRL=13
+    \coordinate (n8)  at ( 0.0,  0.8);
+    \coordinate (n3)  at (-1.3, -0.2);
+    \coordinate (n10) at ( 1.3, -0.2);
+    \coordinate (n1)  at (-2.1, -1.2);
+    \coordinate (n6)  at (-0.5, -1.2);
+    \coordinate (n14) at ( 2.1, -1.2);
+    \coordinate (n4)  at (-0.9, -2.1);
+    \coordinate (n7)  at (-0.1, -2.1);
+    \coordinate (n13) at ( 1.7, -2.1);
+    % Tree edges
+    \foreach \a/\b in {n8/n3, n8/n10, n3/n1, n3/n6, n10/n14,
+                        n6/n4, n6/n7, n14/n13} {
+      \draw[accentgold, opacity=0.22, line width=0.7pt] (\a) -- (\b);
+    }
+    % Bridge edges (connecting graph extensions into tree)
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gL2) -- (n1);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gL4) -- (n4);
+    % Tree nodes with labels
+    \foreach \nd/\lbl in {n8/8, n3/3, n10/10, n1/1, n6/6,
+                           n14/14, n4/4, n7/7, n13/13} {
+      \fill[coverdark, opacity=0.8] (\nd) circle (8pt);
+      \draw[accentgold, opacity=0.30, line width=0.6pt] (\nd) circle (8pt);
+      \node[text=accentgold, opacity=0.35, font=\fontsize{6}{6}\selectfont\bfseries]
+        at (\nd) {\lbl};
+    }
 
-    % — chapter —
-    {\fontsize{24}{30}\selectfont\bfseries\color{accentgold}%
-     Chapter 3:}
+    % == Graph extension (right side — connects into tree) ==
+    \coordinate (gR1) at (5.5, 1.8);
+    \coordinate (gR2) at (4.0, 0.0);
+    \coordinate (gR3) at (4.5, -1.8);
+    \coordinate (gR4) at (5.8, -0.3);
+    % Extension edges
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gR1) -- (gR2);
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gR1) -- (gR4);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gR2) -- (gR3);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gR4) -- (gR2);
+    \draw[accentgold, opacity=0.08, line width=0.5pt] (gR4) -- (gR3);
+    % Bridge edges
+    \draw[accentgold, opacity=0.12, line width=0.5pt] (gR2) -- (n14);
+    \draw[accentgold, opacity=0.10, line width=0.5pt] (gR3) -- (n13);
+    % Extension nodes
+    \foreach \nd/\o in {gR1/0.14, gR2/0.16, gR3/0.10, gR4/0.12} {
+      \fill[accentgold, opacity=\o] (\nd) circle (3pt);
+    }
 
-    \vspace{0.4cm}
+    % == Subtle glow behind the BST root ==
+    \fill[accentgold, opacity=0.03] (n8) circle (2.5cm);
+    \fill[accentgold, opacity=0.02] (n8) circle (4.5cm);
 
-    {\fontsize{24}{26}\selectfont\color{white}%
-     Algorithm Analysis}
+  \end{scope}
 
-    \vfill
+  % ===== MAIN TEXT CONTENT =====
 
-    {\color{accentgold}\rule{4cm}{0.4pt}}
+  % — top accent line —
+  \draw[accentgold, line width=0.8pt, opacity=0.4]
+    ([yshift=-4.5cm, xshift=-4cm]current page.north)
+    -- ++(8cm, 0);
 
-    \vspace{0.6cm}
+  % — subtitle —
+  \node[anchor=center, text=accentgold, font=\fontsize{11}{14}\selectfont]
+    at ([yshift=-5.2cm]current page.north)
+    {\textls[200]{THE COMPLETE SOLUTIONS MANUAL}};
 
-    {\fontsize{18}{22}\selectfont\color{white!70}%
-     Ahmed Amine Azzouzi}
+  % — second accent line —
+  \draw[accentgold, line width=0.4pt, opacity=0.25]
+    ([yshift=-5.8cm, xshift=-3cm]current page.north)
+    -- ++(6cm, 0);
 
-    \vspace{1.5cm}
+  % — main title (two lines) —
+  \node[anchor=center, text=white,
+        font=\fontsize{36}{44}\selectfont\bfseries,
+        align=center]
+    at ([yshift=-8.8cm]current page.north)
+    {Data Structures \&\\[6pt] Algorithm Analysis in C++};
 
-\end{center}
+  % — textbook author —
+  \node[anchor=center, text=dimwhite,
+        font=\fontsize{14}{18}\selectfont\itshape]
+    at ([yshift=-11.5cm]current page.north)
+    {by Clifford A.\ Shaffer};
 
-% ------------------- CONTENT PAGES ------------------------
+  % — decorative diamond —
+  \node[anchor=center, text=accentgold, opacity=0.5,
+        font=\fontsize{10}{10}\selectfont]
+    at ([yshift=-12.8cm]current page.north)
+    {$\diamond$};
+
+  % — chapter block (no frame) —
+  \node[anchor=center, text=accentgold,
+        font=\fontsize{22}{26}\selectfont\bfseries]
+    at ([yshift=-14.8cm]current page.north)
+    {Chapter 3};
+  \node[anchor=center, text=subtlewhite,
+        font=\fontsize{18}{22}\selectfont]
+    at ([yshift=-15.9cm]current page.north)
+    {Algorithm Analysis};
+
+  % — bottom section —
+  % Author name
+  \node[anchor=center, text=subtlewhite,
+        font=\fontsize{16}{20}\selectfont]
+    at ([yshift=4.5cm]current page.south)
+    {Ahmed Amine Azzouzi};
+
+  % Bottom accent line
+  \draw[accentgold, line width=0.6pt, opacity=0.3]
+    ([yshift=3.5cm, xshift=-2.5cm]current page.south)
+    -- ++(5cm, 0);
+
+  % Small year tag
+  \node[anchor=center, text=dimwhite, opacity=0.5,
+        font=\fontsize{9}{12}\selectfont]
+    at ([yshift=2.8cm]current page.south)
+    {\textls[150]{2026}};
+
+\end{tikzpicture}
+
+
+
+% ------------------- CONTENT PAGES -------------------
 \newpage
 \restoregeometry
 \pagecolor{white}
 \color{black}
 \pagenumbering{arabic}
 
+% Table of Contents
+{
+\tableofcontents
+}
 
+\newpage
 
 
 % =============================================================
@@ -313,11 +481,6 @@ Ordering by asymptotic growth rate (slowest to fastest):
 % =============================================================
 \exercise{3.4}
 
-A new machine is $64\times$ faster.  For each complexity, find the new
-problem size~$n'$ solvable in the same time.
-
-\bigskip
-
 \textbf{(a)}\; $T(n)=3\cdot 2^{n}$
 \[
     \frac{3 \cdot 2^{n'}}{64} = 3 \cdot 2^{n}
@@ -402,7 +565,7 @@ $100\,T(n)$ units of work.  We need $n'$ such that
 \medskip
 Observation: For polynomial-time algorithms, the speed-up \emph{multiplies} the
 solvable input size by a constant factor.  For the exponential algorithm
-$2^{n}$, it only \emph{adds} a constant ($\approx 6.64$) a much
+$2^{n}$, it only \emph{adds} a constant ($\approx 6.64$)---a much
 smaller improvement, illustrating why exponential algorithms scale so
 poorly.
 
@@ -420,7 +583,7 @@ We try the ansatz $T(n) = 2^{n^{k}}$ and solve for~$k$.
 
 \bigskip
 
-\textbf{(a)}\; Find $T$ such that $T(2n) = \bigl[T(n)\bigr]^{2}$.
+\textbf{(a)}
 
 Let $T(n) = 2^{n^{k}}$.  Then
 \[
@@ -446,7 +609,7 @@ $T(2n) = 2^{2n} = \bigl(2^{n}\bigr)^{2} = \bigl[T(n)\bigr]^{2}.\;\checkmark$
 
 \bigskip
 
-\textbf{(b)}\; Find $T$ such that $T(2n) = \bigl[T(n)\bigr]^{3}$.
+\textbf{(b)}
 
 Again let $T(n) = 2^{n^{k}}$.  Then
 \[
@@ -490,7 +653,7 @@ and $n_0$ such that
 
 \bigskip
 
-\textbf{(a)}\; Show that $1 \in O(1)$.
+\textbf{(a)}
 
 \textit{Proof.}\;
 Let $f(n) = 1$ and $g(n) = 1$.  Choose $c = 1$ and $n_0 = 1$.
@@ -505,7 +668,7 @@ The condition of the definition is satisfied, so
 
 \bigskip
 
-\textbf{(b)}\; Show that $1 \in O(n)$.
+\textbf{(b)}
 
 \textit{Proof.}\;
 Let $f(n) = 1$ and $g(n) = n$.  Choose $c = 1$ and $n_0 = 1$.
@@ -583,5 +746,591 @@ We assume that all constants $c_i$ are positive.
           Since $c_7 n^6 \ge 0$ for $n \ge 1$, $c_6 2^n + c_7 n^6 \ge c_6 2^n$.
           Choose $c = c_6$ and $n_0 = 1$.
 \end{itemize}
+
+% =============================================================
+%  EXERCISE 3.9
+% =============================================================
+\exercise{3.9}
+
+\textbf{(a)}
+
+By definition, $\sqrt{n} = n^{0.5}$. We want the smallest integer $k$ such that $n^{0.5} \le c\,n^k$ for $n \ge n_0$.
+Since $k$ must be an integer:
+\begin{itemize}
+    \item For $k = 0$: $n^0 = 1$, which does not upper-bound $n^{0.5}$.
+    \item For $k = 1$: $n^1 = n$. Since $n^{0.5} \le n$ for all $n \ge 1$, we have $\sqrt{n} \in O(n^1)$.
+\end{itemize}
+Therefore, the smallest integer is
+\[
+    \boxed{k = 1}
+\]
+
+\bigskip
+
+\textbf{(b)}
+
+We need the smallest integer $k$ such that $n \log n \le c\,n^k$ for $n \ge n_0$.
+\begin{itemize}
+    \item For $k = 1$: We would need $n \log n \le c\,n \implies \log n \le c$, which is false for unbounded $n$. Thus, $n \log n \notin O(n)$.
+    \item For $k = 2$: We need $n \log n \le c\,n^2 \implies \log n \le c\,n$. We know that logarithmic growth is strictly slower than linear growth. For instance, $\log_2 n \le n$ for all $n \ge 1$. Thus, $n \log n \in O(n^2)$.
+\end{itemize}
+Therefore, the smallest integer is
+\[
+    \boxed{k = 2}
+\]
+
+% =============================================================
+%  EXERCISE 3.10
+% =============================================================
+\exercise{3.10}
+
+\textbf{(a)}
+
+\textbf{Yes.} For $2n \in \Theta(3n)$, we must find positive constants $c_1, c_2,$ and $n_0$ such that:
+\[
+    c_1(3n) \le 2n \le c_2(3n) \quad \text{for all } n \ge n_0.
+\]
+Dividing by $n$ (for $n \ge 1$), we get:
+\[
+    3 c_1 \le 2 \le 3 c_2
+\]
+This requires $c_1 \le \frac{2}{3}$ and $c_2 \ge \frac{2}{3}$.
+We can choose $c_1 = \frac{1}{2}$, $c_2 = 1$, and $n_0 = 1$. The inequalities $\frac{3}{2} \le 2 \le 3$ hold true. Thus, $\boxed{2n \in \Theta(3n)}$.
+
+\bigskip
+
+\textbf{(b)}
+
+\textbf{No.} For $2^n \in \Theta(3^n)$ to be true, there must exist positive constants $c_1, c_2,$ and $n_0$ such that:
+\[
+    c_1(3^n) \le 2^n \le c_2(3^n) \quad \text{for all } n \ge n_0.
+\]
+Focusing on the lower bound, dividing both sides by $3^n$ gives:
+\[
+    c_1 \le \left(\frac{2}{3}\right)^n
+\]
+Since $\frac{2}{3} < 1$, as $n \to \infty$, the term $\left(\frac{2}{3}\right)^n \to 0$. In order for the inequality to hold for all arbitrarily large $n$, $c_1$ would have to be $\le 0$. However, by definition, $c_1$ must be a strictly positive constant ($c_1 > 0$). Since no such constant can exist, $2^n$ is not bounded below by a positive multiple of $3^n$. Thus, $\boxed{2^n \notin \Theta(3^n)}$.
+
+% =============================================================
+%  EXERCISE 3.11
+% =============================================================
+\exercise{3.11}
+
+In Section 3.4.5, the Method of Limits states that we compute $L = \lim_{n \to \infty} \frac{f(n)}{g(n)}$.
+\begin{itemize}
+    \item If $0 < L < \infty$, then $f(n) \in \Theta(g(n))$.
+    \item If $L = 0$, then $f(n) \in O(g(n))$ (but not $\Theta$).
+    \item If $L = \infty$, then $f(n) \in \Omega(g(n))$ (but not $\Theta$).
+\end{itemize}
+
+\bigskip
+
+\textbf{(a)}\; $f(n) = \log n^2$; $g(n) = \log n + 5$
+\[
+    L = \lim_{n \to \infty} \frac{\log n^2}{\log n + 5} = \lim_{n \to \infty} \frac{2 \log n}{\log n + 5} = \lim_{n \to \infty} \frac{2}{1 + \frac{5}{\log n}} = 2
+\]
+Since $0 < L < \infty$, $\boxed{f(n) \in \Theta(g(n))}$.
+
+\medskip
+
+\textbf{(b)}\; $f(n) = \sqrt{n}$; $g(n) = \log n^2$
+\[
+    L = \lim_{n \to \infty} \frac{\sqrt{n}}{2 \log n} = \infty
+\]
+(By L'H\^opital's Rule, $\lim \frac{\frac{1}{2\sqrt{n}}}{2/n} = \lim \frac{n}{4\sqrt{n}} = \lim \frac{\sqrt{n}}{4} = \infty$).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(c)}\; $f(n) = \log^2 n$; $g(n) = \log n$
+\[
+    L = \lim_{n \to \infty} \frac{(\log n)^2}{\log n} = \lim_{n \to \infty} \log n = \infty
+\]
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(d)}\; $f(n) = n$; $g(n) = \log^2 n$
+\[
+    L = \lim_{n \to \infty} \frac{n}{(\log n)^2} = \infty
+\]
+(Polynomials grow faster than any power of logarithms).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(e)}\; $f(n) = n \log n + n$; $g(n) = \log n$
+\[
+    L = \lim_{n \to \infty} \frac{n \log n + n}{\log n} = \lim_{n \to \infty} \left(n + \frac{n}{\log n}\right) = \infty
+\]
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(f)}\; $f(n) = \log n^2$; $g(n) = (\log n)^2$
+\[
+    L = \lim_{n \to \infty} \frac{2 \log n}{(\log n)^2} = \lim_{n \to \infty} \frac{2}{\log n} = 0
+\]
+Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
+
+\medskip
+
+\textbf{(g)}\; $f(n) = 10$; $g(n) = \log 10$
+\[
+    L = \lim_{n \to \infty} \frac{10}{\log 10}
+\]
+Both $f$ and $g$ are constants (independent of $n$), so the ratio is a finite positive constant.
+Since $0 < L < \infty$, $\boxed{f(n) \in \Theta(g(n))}$.
+
+\medskip
+
+\textbf{(h)}\; $f(n) = 2^n$; $g(n) = 10n^2$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{10n^2} = \infty
+\]
+(Exponentials grow strictly faster than polynomials).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(i)}\; $f(n) = 2^n$; $g(n) = n \log n$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{n \log n} = \infty
+\]
+(Exponentials grow strictly faster than $n \log n$).
+Since $L = \infty$, $\boxed{f(n) \in \Omega(g(n))}$.
+
+\medskip
+
+\textbf{(j)}\; $f(n) = 2^n$; $g(n) = 3^n$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{3^n} = \lim_{n \to \infty} \left(\frac{2}{3}\right)^n = 0
+\]
+Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
+
+\medskip
+
+\textbf{(k)}\; $f(n) = 2^n$; $g(n) = n^n$
+\[
+    L = \lim_{n \to \infty} \frac{2^n}{n^n} = \lim_{n \to \infty} \left(\frac{2}{n}\right)^n = 0
+\]
+Since $L = 0$, $\boxed{f(n) \in O(g(n))}$.
+
+% =============================================================
+%  EXERCISE 3.12
+% =============================================================
+\exercise{3.12}
+
+\textbf{(a)}
+\begin{lstlisting}
+  a = b + c;
+  d = a + e;
+\end{lstlisting}
+This consists of two basic, constant-time operations. The runtime is unaffected by any input size $n$.
+\[
+    \boxed{\Theta(1)}
+\]
+
+\medskip
+
+\textbf{(b)}
+\begin{lstlisting}
+  sum = 0;
+  for (i=0; i<3; i++)
+    for (j=0; j<n; j++)
+      sum++;
+\end{lstlisting}
+The inner loop executes $n$ times. The outer loop executes a constant 3 times. The total number of operations is $3n$.
+\[
+    \boxed{\Theta(n)}
+\]
+
+\medskip
+
+\textbf{(c)}
+\begin{lstlisting}
+  sum=0;
+  for (i=0; i<n*n; i++)
+    sum++;
+\end{lstlisting}
+The loop executes exactly $n^2$ times.
+\[
+    \boxed{\Theta(n^2)}
+\]
+
+\medskip
+
+\textbf{(d)}
+\begin{lstlisting}
+  for (i=0; i < n-1; i++)
+    for (j=i+1; j < n; j++) {
+      ...
+    }
+\end{lstlisting}
+The outer loop goes from $0$ to $n-2$. The inner loop iterates $n - 1 - i$ times. The total number of iterations is the sum of the first $n-1$ integers: $\sum_{i=1}^{n-1} i = \frac{n(n-1)}{2} \approx \frac{1}{2}n^2$.
+\[
+    \boxed{\Theta(n^2)}
+\]
+
+\medskip
+
+\textbf{(e)}
+\begin{lstlisting}
+  sum = 0;
+  for (i=1; i<=n; i++)
+    for (j=1; j<=n; j*=2)
+      sum++;
+\end{lstlisting}
+The inner loop doubles $j$ each iteration, running $\approx \log_2 n$ times. The outer loop runs $n$ times. The total number of iterations is $n \log_2 n$.
+\[
+    \boxed{\Theta(n \log n)}
+\]
+
+\medskip
+
+\textbf{(f)}
+\begin{lstlisting}
+  sum = 0;
+  for (i=1; i<=n; i*=2)
+    for (j=1; j<=n; j++)
+      sum++;
+\end{lstlisting}
+The outer loop doubles $i$ each iteration, running $\approx \log_2 n$ times. The inner loop iterates $n$ times during each outer loop. Total iterations: $n \log_2 n$.
+\[
+    \boxed{\Theta(n \log n)}
+\]
+
+\medskip
+
+\textbf{(g)}
+\begin{lstlisting}
+  for (i=0; i<n; i++) {
+    for (j=0; j<n; j++)
+      A[j] = Random(n);
+    sort(A, n);
+  }
+\end{lstlisting}
+Inside the outer loop, the inner loop takes $\Theta(n)$ time. The \texttt{sort} function takes $\Theta(n \log n)$ time. Therefore, each iteration of the outer loop takes $\Theta(n + n \log n) = \Theta(n \log n)$ time. The outer loop runs $n$ times, yielding a total runtime of $n \times \Theta(n \log n)$.
+\[
+    \boxed{\Theta(n^2 \log n)}
+\]
+
+\medskip
+
+\textbf{(h)}
+\begin{lstlisting}
+  sum = 0;
+  for (i=0; i<n; i++)
+    for (j=0; A[j]!=i; j++)
+      sum++;
+\end{lstlisting}
+Array $A$ contains a random permutation of values from $0$ to $n-1$. The inner loop acts as a linear search for the value $i$. On average, the inner loop will examine half the array before finding $i$, executing $n/2$ iterations. Over $n$ total searches, the average total iterations is $n \times (n/2) = \frac{1}{2}n^2$.
+\[
+    \boxed{\Theta(n^2)}
+\]
+
+\medskip
+
+\textbf{(i)}
+\begin{lstlisting}
+  sum = 0;
+  if (EVEN(n))
+    for (i=0; i<n; i++)
+      sum++;
+  else
+    sum = sum + n;
+\end{lstlisting}
+When $n$ is EVEN, the loop runs $n$ times: $\Theta(n)$. When $n$ is ODD, no loop runs: $\Theta(1)$. In the average case, we assume there is an equal probability of $n$ being EVEN or ODD. The expected average runtime is therefore $\frac{c_1 n + c_2}{2}$, which scales linearly with $n$.
+\[
+    \boxed{\Theta(n)}
+\]
+
+% =============================================================
+%  EXERCISE 3.13
+% =============================================================
+\exercise{3.13}
+
+\begin{proof}
+To show that $\Theta$ defines an equivalence relation, we must demonstrate that it is reflexive, symmetric, and transitive.
+
+\begin{enumerate}
+    \item \textbf{Reflexivity} ($f(n) \in \Theta(f(n))$):
+    For any $n \ge 1$, it is trivially true that:
+    \[
+        1 \cdot f(n) \le f(n) \le 1 \cdot f(n)
+    \]
+    We can choose constants $c_1 = 1$, $c_2 = 1$, and $n_0 = 1$. Both conditions hold, so reflexivity is satisfied.
+
+    \item \textbf{Symmetry} (If $f(n) \in \Theta(g(n))$, then $g(n) \in \Theta(f(n))$):
+    If $f(n) \in \Theta(g(n))$, there exist positive constants $c_1, c_2,$ and $n_0$ such that for all $n \ge n_0$:
+    \[
+        c_1 g(n) \le f(n) \le c_2 g(n)
+    \]
+    By dividing both inequalities by $c_1$ and $c_2$ respectively, we obtain:
+    \[
+        \frac{1}{c_2} f(n) \le g(n) \le \frac{1}{c_1} f(n)
+    \]
+    Since $c_1$ and $c_2$ are strictly positive constants, $\frac{1}{c_2}$ and $\frac{1}{c_1}$ are also strictly positive constants. This fits the definition of $g(n) \in \Theta(f(n))$.
+
+    \item \textbf{Transitivity} (If $f(n) \in \Theta(g(n))$ and $g(n) \in \Theta(h(n))$, then $f(n) \in \Theta(h(n))$):
+    From the definitions, there exist positive constants such that:
+    \[
+        c_1 g(n) \le f(n) \le c_2 g(n) \quad \text{for all } n \ge n_1
+    \]
+    \[
+        c_3 h(n) \le g(n) \le c_4 h(n) \quad \text{for all } n \ge n_2
+    \]
+    Combining these inequalities for $n \ge \max(n_1, n_2)$, we substitute $g(n)$:
+    \[
+        c_1(c_3 h(n)) \le c_1 g(n) \le f(n) \le c_2 g(n) \le c_2(c_4 h(n))
+    \]
+    This simplifies to:
+    \[
+        (c_1 c_3) h(n) \le f(n) \le (c_2 c_4) h(n)
+    \]
+    Since $c_1, c_2, c_3, c_4$ are all positive constants, their products $c_1 c_3$ and $c_2 c_4$ are also positive constants. Thus, $f(n) \in \Theta(h(n))$.
+\end{enumerate}
+
+Since the relationship is reflexive, symmetric, and transitive, $\Theta$ is an \textbf{equivalence relation}.
+\end{proof}
+
+% =============================================================
+%  EXERCISE 3.14
+% =============================================================
+\exercise{3.14}
+
+\textbf{Answer:} This code calculates the sequence of the famous Collatz conjecture. We are asked for the best \textit{lower bound} ($\Omega$) for its execution time.
+
+To find the minimum possible number of iterations, we consider the scenario where $n$ decreases to $1$ as fast as mathematically possible. The condition \texttt{n = n / 2} halves the value, whereas the condition \texttt{n = 3 * n + 1} more than triples it. Thus, the fastest path to $1$ occurs when $n$ is always EVEN (i.e., $n$ is initially a power of $2$, $n = 2^k$).
+
+If $n = 2^k$, the \texttt{else} block will be executed exactly $k$ times until $n=1$. The number of iterations is $k = \log_2 n$.
+
+Since the number of iterations can never be fewer than $\log_2 n$ (it cannot decrease faster than halving at each step), the best lower bound for the execution of this code fragment is:
+\[
+    \boxed{\Omega(\log n)}
+\]
+
+% =============================================================
+%  EXERCISE 3.15
+% =============================================================
+\exercise{3.15}
+
+\textbf{Yes}, for any \textit{specific} class of inputs (e.g., worst-case only, or best-case only), every algorithm does have a $\Theta$ running-time equation. This is because, for a fixed class, the running time $T(n)$ is a single well-defined function of $n$, and every such function is $\Theta$ of itself.
+
+\textbf{However}, if we interpret the question as asking whether the upper and lower bounds across \textit{different} classes of inputs are always the same, then the answer is \textbf{no}. For example, sequential search has a worst-case cost of $\Theta(n)$ and a best-case cost of $\Theta(1)$. The bounds differ across input classes, so there is no single $\Theta$ expression that describes the algorithm's running time for \textit{all} inputs of size $n$.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.16
+% =============================================================
+\exercise{3.16}
+
+Does every problem for which there exists some algorithm have a $\Theta$ running-time equation? In other words, for every problem, and for any specified class of inputs, is there some algorithm whose upper bound is equal to the problem’s lower bound?
+
+\textbf{No.} There are two primary reasons why a problem might not have a tight $\Theta$ running-time equation:
+\begin{enumerate}
+    \item \textbf{Unknown Optimal Algorithms:} For many complex problems (such as matrix multiplication), there is a gap between the theoretically proven lower bound (e.g., $\Omega(n^2)$) and the best-known algorithm's upper bound. We simply don't yet know if an algorithm exists that perfectly matches the minimum necessary bound for the problem.
+    \item \textbf{Blum's Speedup Theorem:} In theoretical computer science, Blum's Speedup Theorem mathematically proves the existence of computable problems that \textit{do not possess any optimal algorithm}. For any possible algorithm that solves such a problem, there exists another algorithm that is significantly faster. Therefore, there is no "best" algorithm whose upper bound matches the problem's fundamental lower bound.
+\end{enumerate}
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.17
+% =============================================================
+\exercise{3.17}
+
+\textbf{Answer:} To maintain the strict $\Theta(\log n)$ bound, we cannot drop into a sequential $O(n)$ footprint upon finding $K$. Instead, we must continue the binary search in the left half of the array whenever we encounter $K$ to look for earlier occurrences.
+
+\begin{lstlisting}
+int first_occurrence_binary_search(int A[], int n, int K) {
+    int low = 0, high = n - 1;
+    int first_pos = -1; // Initialize to -1 (not found)
+    
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (A[mid] == K) {
+            first_pos = mid;    // Record position of K
+            high = mid - 1;     // Important: Search left for earlier occurrences
+        } 
+        else if (A[mid] < K) {
+            low = mid + 1;
+        } 
+        else {
+            high = mid - 1;
+        }
+    }
+    return first_pos;
+}
+\end{lstlisting}
+
+Because the \texttt{while} loop strictly continues to halve the search space at every step regardless of whether $K$ is found, the routine completes in precisely $\Theta(\log n)$ comparisons.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.18
+% =============================================================
+\exercise{3.18}
+
+\textbf{Answer:} When a standard binary search finishes without finding the element, the \texttt{low} and \texttt{high} pointers cross. In this failed crossing state, the \texttt{high} point index naturally rests at exactly the position of the greatest element less than $K$.
+
+\begin{lstlisting}
+int greatest_less_than(int A[], int n, int K) {
+    int low = 0, high = n - 1;
+    
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (A[mid] < K) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    
+    // 'high' is now the index of the largest element < K.
+    if (high < 0)
+        return ERROR; // K is smaller than all elements
+    return high;
+}
+\end{lstlisting}
+
+\textit{Note:} Since the problem states $K$ does not appear in the array, we only need two branches. When the loop terminates, \texttt{high} naturally points to the greatest value less than $K$.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.19
+% =============================================================
+\exercise{3.19}
+
+\textbf{Answer:} To search an infinite array, we first need to explicitly and dynamically discover an upper bound for the index. We can do this efficiently using \textbf{Exponential Search} (also known as scaling search operations).
+
+\textbf{Algorithm Steps:}
+\begin{enumerate}
+    \item We start at index $i = 1$.
+    \item We repeatedly double the bounded index ($i = i \times 2$) checking the array limit condition until $A[i] \ge K$.
+    \item Once an upper bound $i$ (which equals $2^k$) is found, we know the object $K$ must lay strictly between indices $2^{k-1}$ and $2^k$.
+    \item We perform a standard restricted binary search to the finite subarray $A[2^{k-1} \dots 2^k]$.
+\end{enumerate}
+
+\textbf{Time Bound Analysis:}
+If the smallest value $\ge K$ rests at position $n$, then stepping dynamically in powers of $2$ requires $k \approx \log_2 n$ steps to successfully overshoot $n$. Scanning iteratively for an upper bound therefore takes exactly $O(\log n)$ steps.
+
+Upon finding our limited subarray boundary, applying standard binary search to the interval of size proportional to $2^k - 2^{k-1} = 2^{k-1} \approx \frac{n}{2}$ takes exactly $\log_2(n/2) = \log_2 n - 1 = O(\log n)$ time structure. 
+
+The combined sequential time of dynamic binding and searching is $O(\log n) + O(\log n) = \boxed{O(\log n)}$.
+
+% =============================================================
+%  EXERCISE 3.20
+% =============================================================
+\exercise{3.20}
+
+\textbf{(a)} If the dividing point computation is $i = l + (r - l)/3$, the array is split into two partitions of roughly $1/3$ and $2/3$ size. In the worst case, the target element will always fall into the larger $2/3$ partition. 
+The size of the subarray at step $k$ is $n (2/3)^k$. Setting this to 1 yields:
+\[
+    k = \log_{3/2} n
+\]
+In asymptotic terms, the running time is still $\boxed{\Theta(\log n)}$. 
+To compare the speed with standard binary search ($\log_2 n$), we use the change of base formula:
+\[
+    \log_{3/2} n = \frac{\log_2 n}{\log_2(3/2)} = \frac{\log_2 n}{\log_2 3 - \log_2 2} \approx \frac{\log_2 n}{1.585 - 1} \approx 1.71 \log_2 n
+\]
+Thus, the modified program will be approximately \textbf{1.71 times slower} than the standard binary search.
+
+\bigskip
+
+\textbf{(b)} If the computation is changed to $i = r - 2$, the array is partitioned into sizes of roughly $n - 3$ and $2$. In the worst case, the target element is always in the larger partition, causing the search space to shrink by only a constant $3$ elements per step.
+The number of steps required to reduce $n$ to $1$ is roughly $n / 3$. 
+In asymptotic terms, the running time decays to $\boxed{\Theta(n)}$.
+Because the complexity shifts from logarithmic to linear, it is an asymptotic difference, not just a constant factor. For any moderately large $n$, it will be \textbf{massively slower}.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.21
+% =============================================================
+\exercise{3.21}
+
+\textbf{Algorithm Design:}
+Since the \texttt{compare} function only tells us if two pieces are adjacent (an exact match), there is no transitive mathematical property (like greater-than/less-than) that would allow us to sort the pieces organically in $O(N \log N)$ time. We must use targeted iterative searches. Let $N = n \times m$ be the total pieces.
+
+\begin{enumerate}
+    \item Start by picking an arbitrary piece (or explicitly finding a corner piece) and place it at the first $(0,0)$ position in our grid.
+    \item For every subsequent position in the $n \times m$ grid, look at the physically required adjacent pieces that have already been placed (e.g., the piece immediately to the left, or the piece above).
+    \item Iterate through the pool of remaining unplaced pieces, testing them against the placed adjacent piece using the $O(1)$ \texttt{compare} function.
+    \item When the match is found, permanently place the piece into the matrix and explicitly remove it from the pool of unplaced candidates.
+\end{enumerate}
+
+\textbf{Summation and Closed-Form:}
+For the first piece, we expend 0 compares. For the second piece, we may search up to $N-1$ pieces. For the third, $N-2$ pieces, and so on. To place the $k$-th piece, we must search through the remaining $N - k + 1$ pieces. 
+In the absolute worst case, the total number of comparisons is the sum of the remaining pieces:
+\[
+    \sum_{k=1}^{N-1} (N - k) \;=\; \sum_{i=1}^{N-1} i
+\]
+Using the fundamental arithmetic series formula, the closed-form solution is:
+\[
+    \boxed{\frac{N(N-1)}{2} \implies \Theta(N^2)}
+\]
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.22
+% =============================================================
+\exercise{3.22}
+
+\textbf{No to both.} The average-case cost is mathematically defined strictly as the expected value (a weighted average) of the running times across all possible inputs of size $n$. 
+
+If $C_i$ is the cost of input $i$, the worst-case cost is definitively $\max(C_i)$ and the best-case cost is $\min(C_i)$. A weighted average of a set of numbers strictly cannot be greater than the maximum number in that set, nor can it ever be less than the minimum number. Therefore, the average-case complexity is permanently and irrevocably bounded between the absolute best and worst-case complexities.
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.23
+% =============================================================
+\exercise{3.23}
+
+\begin{proof}
+Let $A(n)$ be the average-case running time and $W(n)$ be the worst-case running time. 
+By fundamental definition, the worst-case running time must be greater than or equal to the average-case running time for all $n$:
+\[
+    W(n) \ge A(n)
+\]
+We are given that $A(n) \in \Theta(f(n))$. The formal definition of $\Theta$ implies that $A(n) \in \Omega(f(n))$, meaning there exists a strictly positive constant $c$ and an integer $n_0$ such that for all $n \ge n_0$:
+\[
+    A(n) \ge c\,f(n)
+\]
+Because $W(n) \ge A(n)$, we can combine the sequential inequalities to state that for all $n \ge n_0$:
+\[
+    W(n) \ge c\,f(n)
+\]
+This satisfies the formal definition of $\Omega$. Thus, $\boxed{W(n) \in \Omega(f(n))}$.
+\end{proof}
+
+\bigskip
+
+% =============================================================
+%  EXERCISE 3.24
+% =============================================================
+\exercise{3.24}
+
+\begin{proof}
+Let $A(n)$ be the average-case running time and $B(n)$ be the best-case running time. 
+By fundamental definition, the best-case running time must be less than or equal to the average-case running time for all $n$:
+\[
+    B(n) \le A(n)
+\]
+We are given that $A(n) \in \Theta(f(n))$. The formal definition of $\Theta$ guarantees that $A(n) \in O(f(n))$, meaning there exists a strictly positive constant $c$ and an integer $n_0$ such that for all $n \ge n_0$:
+\[
+    A(n) \le c\,f(n)
+\]
+Because $B(n) \le A(n)$, we can chain the inequalities to state that for all $n \ge n_0$:
+\[
+    B(n) \le A(n) \le c\,f(n) \implies B(n) \le c\,f(n)
+\]
+This satisfies the formal definition of Big-Oh. Thus, $\boxed{B(n) \in O(f(n))}$.
+\end{proof}
 
 \end{document}

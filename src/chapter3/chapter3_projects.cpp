@@ -6,7 +6,6 @@
 #include <iostream>
 #include <chrono>
 #include <cstdint>
-
 #include <iomanip>
 #include <vector>
 #include <random>
