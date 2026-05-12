@@ -31,3 +31,4 @@ Each chapter is treated as its own self-contained module:
 | 13 | Advanced Tree Structures | ⬜ Not Started | ⬜ Not Started |
 | 14 | Analysis Techniques | ⬜ Not Started | ⬜ Not Started |
 | 15 | Limits to Computation | ⬜ Not Started | ⬜ Not Started |
+DIE ENDE
