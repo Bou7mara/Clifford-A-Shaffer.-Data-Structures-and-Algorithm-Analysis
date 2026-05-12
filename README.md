@@ -3,7 +3,7 @@
 
 ## ✦ This Is
 
-This repository contains full solutions to every **exercise** and **project** in Clifford A. Shaffer's *Data Structures and Algorithm Analysis in C++*.
+A repository containing full solutions to every **exercise** and **project** in Clifford A. Shaffer's *Data Structures and Algorithm Analysis in C++*.
 
 Each chapter is treated as its own self-contained module:
 
